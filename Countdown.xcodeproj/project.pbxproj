@@ -14,6 +14,7 @@
 		4400189421B26B980066EB0F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4400189221B26B980066EB0F /* LaunchScreen.storyboard */; };
 		4400189C21B28B120066EB0F /* AddEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4400189B21B28B120066EB0F /* AddEventViewController.swift */; };
 		4400189E21B3505F0066EB0F /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4400189D21B3505F0066EB0F /* Event.swift */; };
+		4471AF3E21B67F5200761DAC /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471AF3D21B67F5200761DAC /* DataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		4400189521B26B980066EB0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4400189B21B28B120066EB0F /* AddEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEventViewController.swift; sourceTree = "<group>"; };
 		4400189D21B3505F0066EB0F /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		4471AF3D21B67F5200761DAC /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 			children = (
 				4400188921B26B970066EB0F /* AppDelegate.swift */,
 				4400189D21B3505F0066EB0F /* Event.swift */,
+				4471AF3D21B67F5200761DAC /* DataModel.swift */,
 				4400188B21B26B970066EB0F /* MainViewController.swift */,
 				4400189B21B28B120066EB0F /* AddEventViewController.swift */,
 				4400188D21B26B970066EB0F /* Main.storyboard */,
@@ -141,6 +144,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4471AF3E21B67F5200761DAC /* DataModel.swift in Sources */,
 				4400189E21B3505F0066EB0F /* Event.swift in Sources */,
 				4400188C21B26B970066EB0F /* MainViewController.swift in Sources */,
 				4400189C21B28B120066EB0F /* AddEventViewController.swift in Sources */,
