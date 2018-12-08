@@ -16,6 +16,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var tableView: UITableView!
     
     var dataModel = DataModel()
+    
+    let formatter = DateFormatter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,14 +29,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         tableView.reloadData()
         updateLabels()
+        
+        formatter.dateStyle = .medium
     }
 
     func updateLabels() {
         daysRemainingLabel.isHidden = dataModel.events.isEmpty
         mainEventDateLabel.isHidden = dataModel.events.isEmpty
         mainEventLabel.isHidden = dataModel.events.isEmpty
+        
+        if !dataModel.events.isEmpty {
+            mainEventLabel.text = dataModel.events[0].name
+            mainEventDateLabel.text = formatter.string(from: dataModel.events[0].date)
+        }
     }
-    
     
     // MARK: - Navigation
     
@@ -51,13 +59,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath)
         
         if dataModel.events.isEmpty {
-            print("cellForRow: Events[] is empty")
+            cell.textLabel?.textAlignment = .center
             cell.textLabel?.text = "No events found. Add one now!"
             cell.accessoryType = .disclosureIndicator
         } else {
-            print("cellForRow: Events[] is NOT empty")
             let event = dataModel.events[indexPath.row]
             cell.textLabel?.text = event.name
+            cell.detailTextLabel?.text = formatter.string(from: event.date)
             cell.accessoryType = .disclosureIndicator
         }
         
@@ -94,8 +102,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func eventDetailViewController(_ controller: AddEventViewController, didFinishAdding event: Event) {
-        let newRowIndex = dataModel.events.count
-        
         if dataModel.events.isEmpty {
             let initialIndexPath = IndexPath(row: 0, section: 0)
             tableView.beginUpdates()
@@ -104,10 +110,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.insertRows(at: [initialIndexPath], with: .automatic)
             tableView.endUpdates()
         } else {
-            dataModel.events.append(event)
-            let indexPath = IndexPath(row: newRowIndex, section: 0)
-            let indexPaths = [indexPath]
-            tableView.insertRows(at: indexPaths, with: .automatic)
+            if event.mainEvent {
+                dataModel.events.insert(event, at: 0)
+                let indexPath = IndexPath(row: 0, section: 0)
+                let indexPaths = [indexPath]
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } else {
+                let newRowIndex = dataModel.events.count
+                
+                dataModel.events.append(event)
+                let indexPath = IndexPath(row: newRowIndex, section: 0)
+                let indexPaths = [indexPath]
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            }
         }
         
         controller.dismiss(animated: true, completion: nil)

@@ -16,37 +16,116 @@ protocol EventDetailViewControllerDelegate: class {
 
 class AddEventViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var eventNameTextField: UITextField!
+    @IBOutlet weak var doneBarButton: UIBarButtonItem!
+    @IBOutlet weak var mainEventToggle: UISwitch!
+    @IBOutlet var datePickerCell: UITableViewCell!
+    @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var eventDateLabel: UILabel!
+    
+    var datePickerVisible = false
+    var eventDate = Date()
     
     weak var delegate: EventDetailViewControllerDelegate?
-    @IBOutlet weak var doneBarButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         eventNameTextField.becomeFirstResponder()
+        mainEventToggle.isOn = false
+        updateEventDateLabel()
     }
     
     // MARK: - Actions
     @IBAction func cancel() {
+        eventNameTextField.resignFirstResponder()
         delegate?.eventDetailViewControllerDidCancel(self)
     }
     
     @IBAction func done() {
         // TODO: editing code goes here
         
-        let event = Event(eventName: eventNameTextField.text!, eventDate: Date(), eventCategory: .Life)
+        eventNameTextField.resignFirstResponder()
+        let event = Event(eventName: eventNameTextField.text!, eventDate: Date(), eventCategory: Event.Category.Life, mainEvent: mainEventToggle.isOn)
         eventNameTextField.resignFirstResponder()
         delegate?.eventDetailViewController(self, didFinishAdding: event)
+    }
+    
+    func showDatePicker() {
+        datePickerVisible = true
+        print("Datepicker is now visible")
+        let indexPathDatePicker = IndexPath(row: 3, section: 1)
+        tableView.insertRows(at: [indexPathDatePicker], with: .fade)
+    }
+    
+    @IBAction func dateChanged(_ datePicker: UIDatePicker) {
+        eventDate = datePicker.date
+        updateEventDateLabel()
+    }
+    
+    func updateEventDateLabel() {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        eventDateLabel.text = formatter.string(from: eventDate)
+    }
+    
+    // MARK: - TableView Overrides
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        eventNameTextField.resignFirstResponder()
+        
+        if indexPath.section == 1 && indexPath.row == 2 {
+            showDatePicker()
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 1 && indexPath.row == 3 {
+            return datePickerCell
+        } else {
+            return super.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 1 && datePickerVisible {
+            print("NumberOfRows: returning 4 rows")
+            return 4
+        } else {
+            print("NumberofRows: returning \(super.tableView(tableView, numberOfRowsInSection: section)) rows")
+            return super.tableView(tableView, numberOfRowsInSection: section)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 1 && indexPath.row == 3 {          // The row of the Date Picker
+            return 217
+        } else {
+            return super.tableView(tableView, heightForRowAt: indexPath)
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if indexPath.section == 1 && indexPath.row == 2 {         // Row of the Event Date cell
+            return indexPath
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
+        var newIndexPath = indexPath
+        if indexPath.section == 1 && indexPath.row == 3 {
+            newIndexPath = IndexPath(row: 0, section: indexPath.section)
+        }
+        
+        return super.tableView(tableView, indentationLevelForRowAt: newIndexPath)
     }
     
     // MARK: - TextFieldDelegate

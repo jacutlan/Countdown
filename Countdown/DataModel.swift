@@ -11,8 +11,4 @@ import Foundation
 class DataModel {
     var events = [Event]()
     
-    //init() {
-    //    events.append(Event(eventName: "Errol's Head Falls Off", eventDate: Date(), eventCategory: .Life))
-    //    events.append(Event(eventName: "Margaret Lays an Egg", eventDate: Date(), eventCategory: .Work))
-    //}
 }
