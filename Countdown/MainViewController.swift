@@ -20,6 +20,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        formatter.dateFormat = "E, d MMM yyyy"
         print("**** HomeDirectory: " + NSHomeDirectory())
         
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -31,18 +32,35 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewWillAppear(animated)
         navigationController?.navigationBar.prefersLargeTitles = true
         //loadData()
-        
-        formatter.dateFormat = "E, d MMM yyyy"
+
     }
     
     func configureView() {
         if eventsArray.isEmpty {
-            self.navigationItem.title = "Add an Event"
+            updateTitle(newTitle: "Add an Event")
+            dismissTableView(tableView)
             updateLabels()
         } else {
-            self.navigationItem.title = "My Events"
+            updateTitle(newTitle: "My Events")
             loadData()
             updateLabels()
+        }
+    }
+    
+    func dismissTableView(_ tableView: UITableView) {
+        UIView.animate(withDuration: 0.5) {
+            
+            }
+    }
+    
+    func updateTitle(newTitle: String) {
+        if self.navigationItem.title != newTitle {
+            let pushTextAnimation = CATransition()
+            pushTextAnimation.duration = 0.5
+            pushTextAnimation.type = CATransitionType.push
+            
+            navigationController?.navigationBar.layer.add(pushTextAnimation, forKey: "pushText")
+            navigationItem.title = newTitle
         }
     }
 
@@ -62,6 +80,26 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         mainEventLabel.isHidden = eventsArray.isEmpty
         
         if !eventsArray.isEmpty {
+            // Work out the difference between today and the main event
+            let calendar = Calendar.current
+            let date1 = calendar.startOfDay(for: Date())    // Today's date
+            let date2 = eventsArray[0].date                 // Main event's date
+            let components = calendar.dateComponents([.day], from: date1, to: date2)
+            let days = components.day
+            
+            if let daysRemaining = days {
+                switch daysRemaining {
+                case 1...:
+                    daysRemainingLabel.text = String(daysRemaining)
+                case 0:
+                    daysRemainingLabel.text = "Today"
+                case ..<0:
+                    daysRemainingLabel.text = "Gone"
+                default:
+                    daysRemainingLabel.text = "?"
+                }
+            }
+            
             mainEventLabel.text = eventsArray[0].name
             mainEventDateLabel.text = formatter.string(from: eventsArray[0].date)
         }
@@ -142,7 +180,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let newRowIndex = eventsArray.count
     
         eventsArray.append(event)
-        print("*** The New Event's Date is \(event.date)")
         EventManager.shared.addEvent(event)
         let indexPath = IndexPath(row: newRowIndex, section: 0)
         let indexPaths = [indexPath]

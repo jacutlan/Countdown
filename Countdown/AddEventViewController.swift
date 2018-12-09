@@ -14,22 +14,27 @@ protocol EventDetailViewControllerDelegate: class {
     func eventDetailViewController(_ controller: AddEventViewController, didFinishEditing event: Event)
 }
 
-class AddEventViewController: UITableViewController, UITextFieldDelegate {
+class AddEventViewController: UITableViewController, UITextFieldDelegate, CategoryTableViewControllerDelegate {
     @IBOutlet weak var eventNameTextField: UITextField!
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var mainEventToggle: UISwitch!
-    @IBOutlet var datePickerCell: UITableViewCell!
+    @IBOutlet weak var datePickerCell: UITableViewCell!
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var eventDateLabel: UILabel!
+    @IBOutlet weak var categoryLabel: UILabel!
     
     var datePickerVisible = false
+    
+    var newEvent = Event()
     var eventDate = Date()
+
     
     weak var delegate: EventDetailViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
+        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -39,7 +44,18 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
         super.viewWillAppear(animated)
         eventNameTextField.becomeFirstResponder()
         mainEventToggle.isOn = false
-        updateEventDateLabel()
+        updateLabels()
+    }
+    
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "PickCategory" {
+            let backButton = UIBarButtonItem()
+            backButton.title = ""
+            backButton.tintColor = UIColor.white
+            navigationItem.backBarButtonItem = backButton
+        }
     }
     
     // MARK: - Actions
@@ -50,16 +66,16 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     
     @IBAction func done() {
         // TODO: editing code goes here
-        
-        //let event = Event(eventName: eventNameTextField.text!, eventDate: eventDate, eventCategory: Event.Category.Life, mainEvent: mainEventToggle.isOn)
-        let event = Event()
-        event.name = eventNameTextField.text!
-        event.date = eventDate
-        event.category = .Birthday
+
+        newEvent.name = eventNameTextField.text!
+        newEvent.date = eventDate
+        //newEvent.category = "Made Up Nonsense"
         eventNameTextField.resignFirstResponder()
         
-        delegate?.eventDetailViewController(self, didFinishAdding: event)
+        delegate?.eventDetailViewController(self, didFinishAdding: newEvent)
     }
+    
+    // MARK: - DatePicker
     
     func showDatePicker() {
         datePickerVisible = true
@@ -68,15 +84,24 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
     }
     
-    @IBAction func dateChanged(_ datePicker: UIDatePicker) {
-        eventDate = datePicker.date
-        updateEventDateLabel()
+    func hideDatePicker() {
+        if datePickerVisible {
+            datePickerVisible = false
+            let indexPathDatePicker = IndexPath(row: 3, section: 1)
+            tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
+        }
     }
     
-    func updateEventDateLabel() {
+    @IBAction func dateChanged(_ datePicker: UIDatePicker) {
+        eventDate = datePicker.date
+        updateLabels()
+    }
+    
+    func updateLabels() {
         let formatter = DateFormatter()
         formatter.dateFormat = "E, d MMM yyyy"
         eventDateLabel.text = formatter.string(from: eventDate)
+        categoryLabel.text = newEvent.category
     }
     
     // MARK: - TableView Overrides
@@ -86,7 +111,11 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
         eventNameTextField.resignFirstResponder()
         
         if indexPath.section == 1 && indexPath.row == 2 {
-            showDatePicker()
+            if !datePickerVisible {
+                showDatePicker()
+            } else {
+                hideDatePicker()
+            }
         }
     }
     
@@ -101,7 +130,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && datePickerVisible {
             return 4
-        } else {           
+        } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
     }
@@ -115,7 +144,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath.section == 1 && indexPath.row == 2 {         // Row of the Event Date cell
+        if (indexPath.section == 1 && indexPath.row == 2) || (indexPath.section == 1 && indexPath.row == 0) { // Row of the Event Date + Category cells
             return indexPath
         } else {
             return nil
@@ -149,5 +178,20 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        hideDatePicker()
+    }
+    
+    // MARK: - CategoryTableViewControllerDelegate
+    
+    func categoryTableViewControllerDidCancel(_ controller: CategoryTableViewController) {
+        controller.navigationController?.popViewController(animated: true)
+    }
+    
+    func categoryTableViewController(_ controller: CategoryTableViewController, didFinishSelecting category: String) {
+        // set the event category
+        newEvent.category = category
     }
 }

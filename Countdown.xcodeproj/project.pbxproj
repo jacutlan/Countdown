@@ -18,6 +18,8 @@
 		443C5CFA21BBC56300B7F8A9 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 443C5CF721BBC56200B7F8A9 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		443C5CFB21BBC56300B7F8A9 /* RealmSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */; };
 		443C5CFC21BBC56300B7F8A9 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		443C5D0021BCB7DD00B7F8A9 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */; };
+		443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */; };
 		4471AF3E21B67F5200761DAC /* RealmDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471AF3D21B67F5200761DAC /* RealmDataModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +50,8 @@
 		4400189D21B3505F0066EB0F /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
 		443C5CF721BBC56200B7F8A9 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
+		443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
+		443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
 		4471AF3D21B67F5200761DAC /* RealmDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +92,8 @@
 				4400188921B26B970066EB0F /* AppDelegate.swift */,
 				4400188B21B26B970066EB0F /* MainViewController.swift */,
 				4400189B21B28B120066EB0F /* AddEventViewController.swift */,
+				443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */,
+				443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */,
 				4400189D21B3505F0066EB0F /* EventManager.swift */,
 				4471AF3D21B67F5200761DAC /* RealmDataModel.swift */,
 				4400188D21B26B970066EB0F /* Main.storyboard */,
@@ -196,6 +202,8 @@
 				4400188C21B26B970066EB0F /* MainViewController.swift in Sources */,
 				4400189C21B28B120066EB0F /* AddEventViewController.swift in Sources */,
 				4400188A21B26B970066EB0F /* AppDelegate.swift in Sources */,
+				443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */,
+				443C5D0021BCB7DD00B7F8A9 /* CategoryTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

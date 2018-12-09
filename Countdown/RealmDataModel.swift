@@ -9,13 +9,9 @@
 import Foundation
 import RealmSwift
 
-class Event:Object {
+class Event: Object {
     @objc dynamic var name = ""
     @objc dynamic var date = Date()
-    var category = Category.Life
+    @objc dynamic var category = ""
     var mainEvent = false
-    
-    enum Category {
-        case Travel, Life, Work, School, Anniversary, Birthday, Holiday, Deadline
-    }
 }
