@@ -15,32 +15,55 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var mainEventDateLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     
-    var dataModel = DataModel()
-    
     let formatter = DateFormatter()
+    var eventsArray = [Event]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("**** HomeDirectory: " + NSHomeDirectory())
         
-        updateLabels()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        loadData()
+        configureView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData()
-        updateLabels()
+        navigationController?.navigationBar.prefersLargeTitles = true
+        //loadData()
         
-        formatter.dateStyle = .medium
+        formatter.dateFormat = "E, d MMM yyyy"
+    }
+    
+    func configureView() {
+        if eventsArray.isEmpty {
+            self.navigationItem.title = "Add an Event"
+            updateLabels()
+        } else {
+            self.navigationItem.title = "My Events"
+            loadData()
+            updateLabels()
+        }
     }
 
+    func loadData() {
+        if let events = EventManager.shared.getEvents() {
+            eventsArray = events
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
     func updateLabels() {
-        daysRemainingLabel.isHidden = dataModel.events.isEmpty
-        mainEventDateLabel.isHidden = dataModel.events.isEmpty
-        mainEventLabel.isHidden = dataModel.events.isEmpty
+        daysRemainingLabel.isHidden = eventsArray.isEmpty
+        mainEventDateLabel.isHidden = eventsArray.isEmpty
+        mainEventLabel.isHidden = eventsArray.isEmpty
         
-        if !dataModel.events.isEmpty {
-            mainEventLabel.text = dataModel.events[0].name
-            mainEventDateLabel.text = formatter.string(from: dataModel.events[0].date)
+        if !eventsArray.isEmpty {
+            mainEventLabel.text = eventsArray[0].name
+            mainEventDateLabel.text = formatter.string(from: eventsArray[0].date)
         }
     }
     
@@ -58,22 +81,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "eventCell", for: indexPath)
         
-        if dataModel.events.isEmpty {
+        /*if eventsArray.isEmpty {
             cell.textLabel?.textAlignment = .center
             cell.textLabel?.text = "No events found. Add one now!"
             cell.accessoryType = .disclosureIndicator
-        } else {
-            let event = dataModel.events[indexPath.row]
+        } else {*/
+        if !eventsArray.isEmpty {
+            let event = eventsArray[indexPath.row]
             cell.textLabel?.text = event.name
             cell.detailTextLabel?.text = formatter.string(from: event.date)
             cell.accessoryType = .disclosureIndicator
+            //}
         }
         
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (dataModel.events.isEmpty) {
+        if (eventsArray.isEmpty) {
             performSegue(withIdentifier: "AddEvent", sender: indexPath.row)
         }
         
@@ -83,11 +108,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - TableView Data Source
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if dataModel.events.isEmpty {
-            print("numberOfRows: Events[] is empty - returning 1 row")
-            return 1
-        } else {
-            return dataModel.events.count
+        //if eventsArray.isEmpty {
+        //    return 1
+        //} else {
+            return eventsArray.count
+        //}
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let eventToDelete = eventsArray[indexPath.row]
+            
+            tableView.beginUpdates()
+            EventManager.shared.deleteEvent(eventToDelete)
+            eventsArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            configureView()
+            tableView.endUpdates()
         }
     }
     
@@ -98,34 +135,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     // MARK: - EventDetailViewControllerDelegate
     
     func eventDetailViewControllerDidCancel(_ controller: AddEventViewController) {
-        controller.dismiss(animated: true, completion: nil)
+        controller.navigationController?.popViewController(animated: true)
     }
     
     func eventDetailViewController(_ controller: AddEventViewController, didFinishAdding event: Event) {
-        if dataModel.events.isEmpty {
-            let initialIndexPath = IndexPath(row: 0, section: 0)
-            tableView.beginUpdates()
-            tableView.deleteRows(at: [initialIndexPath], with: .automatic)
-            dataModel.events.append(event)
-            tableView.insertRows(at: [initialIndexPath], with: .automatic)
-            tableView.endUpdates()
-        } else {
-            if event.mainEvent {
-                dataModel.events.insert(event, at: 0)
-                let indexPath = IndexPath(row: 0, section: 0)
-                let indexPaths = [indexPath]
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } else {
-                let newRowIndex = dataModel.events.count
-                
-                dataModel.events.append(event)
-                let indexPath = IndexPath(row: newRowIndex, section: 0)
-                let indexPaths = [indexPath]
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            }
-        }
-        
-        controller.dismiss(animated: true, completion: nil)
+        let newRowIndex = eventsArray.count
+    
+        eventsArray.append(event)
+        print("*** The New Event's Date is \(event.date)")
+        EventManager.shared.addEvent(event)
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        configureView()
+        controller.navigationController?.popViewController(animated: true)
     }
     
     func eventDetailViewController(_ controller: AddEventViewController, didFinishEditing event: Event) {

@@ -29,6 +29,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = false
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -50,9 +51,13 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     @IBAction func done() {
         // TODO: editing code goes here
         
+        //let event = Event(eventName: eventNameTextField.text!, eventDate: eventDate, eventCategory: Event.Category.Life, mainEvent: mainEventToggle.isOn)
+        let event = Event()
+        event.name = eventNameTextField.text!
+        event.date = eventDate
+        event.category = .Birthday
         eventNameTextField.resignFirstResponder()
-        let event = Event(eventName: eventNameTextField.text!, eventDate: Date(), eventCategory: Event.Category.Life, mainEvent: mainEventToggle.isOn)
-        eventNameTextField.resignFirstResponder()
+        
         delegate?.eventDetailViewController(self, didFinishAdding: event)
     }
     
@@ -70,7 +75,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     
     func updateEventDateLabel() {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
+        formatter.dateFormat = "E, d MMM yyyy"
         eventDateLabel.text = formatter.string(from: eventDate)
     }
     
@@ -95,10 +100,8 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && datePickerVisible {
-            print("NumberOfRows: returning 4 rows")
             return 4
-        } else {
-            print("NumberofRows: returning \(super.tableView(tableView, numberOfRowsInSection: section)) rows")
+        } else {           
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
     }
