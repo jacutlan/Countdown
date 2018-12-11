@@ -12,6 +12,6 @@ import RealmSwift
 class Event: Object {
     @objc dynamic var name = ""
     @objc dynamic var date = Date()
-    @objc dynamic var category = ""
+    @objc dynamic var category = "Life" // Default category
     var mainEvent = false
 }

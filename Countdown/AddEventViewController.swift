@@ -34,7 +34,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.prefersLargeTitles = false
-        
+        updateLabels()
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -55,6 +55,10 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             backButton.title = ""
             backButton.tintColor = UIColor.white
             navigationItem.backBarButtonItem = backButton
+            
+            let controller = segue.destination as! CategoryTableViewController
+            controller.delegate = self
+            controller.selectedCategory = newEvent.category
         }
     }
     
@@ -79,7 +83,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     func showDatePicker() {
         datePickerVisible = true
-        print("Datepicker is now visible")
+        datePicker.minimumDate = Date()
         let indexPathDatePicker = IndexPath(row: 3, section: 1)
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
     }

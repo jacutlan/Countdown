@@ -18,17 +18,46 @@ protocol CategoryTableViewControllerDelegate: class {
 class CategoryTableViewController: UITableViewController {
     
     var alert: UIAlertController?
-    var categories = ["Life", "Birthdays", "Work", "School", "Deadline", "Travel"]
-    var selectedCategory = "Work" //String!
-    var delegate: CategoryTableViewControllerDelegate?
+    var categories = [String]()
+    var selectedCategory: String!
     var selectedIndexPath: IndexPath?
+    
+    weak var delegate: CategoryTableViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedIndexPath = IndexPath(row: categories.firstIndex(of: selectedCategory)!, section: 0)
+        categories = readCategoriesPropertyList()
+        
+        if let categoryIndex = categories.firstIndex(of: selectedCategory) {
+            selectedIndexPath = IndexPath(row: categoryIndex, section: 0)
+        } else {
+            selectedIndexPath = IndexPath(row: 0, section: 0)
+        }
     }
 
     // MARK: - Table view data source
+    
+    func readCategoriesPropertyList() -> [String] {
+        if let path = Bundle.main.path(forResource: "Categories", ofType: "plist"), let dict = NSDictionary(contentsOfFile: path), let categories = dict["Categories"] {
+            print(categories)
+            return categories as! [String]
+        } else {
+            return ["ERROR!"]
+        }
+    }
+    
+    func updateCategoriesPropertyList() {
+        if let path = Bundle.main.path(forResource: "Categories", ofType: "plist"), let dict = NSMutableDictionary(contentsOfFile: path) {
+            print("UpdateCategories: dict currently contains: \(dict)")
+            dict["Categories"] = categories
+            print("After the update, it now contains \(dict)")
+            if dict.write(toFile: path, atomically: true) {
+                print("Successfully wrote to the plist")
+            } else {
+                print("I DONE FUCKED UP")
+            }
+        }
+    }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -48,17 +77,24 @@ class CategoryTableViewController: UITableViewController {
             return
         }
         
-        if let newCell = tableView.cellForRow(at: indexPath), newCell.accessoryType == .none {
-            print("New cell! Accessory type is NONE")
+        // User tapped a different category to what was selected previously. Check this new category instead
+        if let newCell = tableView.cellForRow(at: indexPath), newCell.accessoryType == .none, indexPath.row != categories.count {
             newCell.accessoryType = .checkmark
+            delegate?.categoryTableViewController(self, didFinishSelecting: categories[indexPath.row])
         }
         
-        if let oldCell = tableView.cellForRow(at: selectedIndexPath!), oldCell.accessoryType == .checkmark {
-            print("Old cell! Accessory type was CHECKMARK!")
+        // Remove the checkmark from the previously selected category
+        if let oldCell = tableView.cellForRow(at: selectedIndexPath!), oldCell.accessoryType == .checkmark, indexPath.row != categories.count {
             oldCell.accessoryType = .none
         }
         
-        selectedIndexPath = indexPath
+        // Update the selectedIndexPath value to reflect the new one
+        if indexPath.row != categories.count {
+            selectedIndexPath = indexPath
+        } else {
+            // User tapped the Add New Category row
+            addCategory()
+        }
         
         // Whatever else needs to happen with the Category goes here
     }
@@ -74,18 +110,26 @@ class CategoryTableViewController: UITableViewController {
             textfield.textColor = UIColor.blue
             textfield.clearButtonMode = UITextField.ViewMode.whileEditing
             textfield.borderStyle = UITextField.BorderStyle.roundedRect
+            textfield.autocapitalizationType = .words
             textfield.addTarget(self, action: #selector(self.textDidChange(_:)), for: UIControl.Event.editingChanged)
         })
         
         let doneAction = UIAlertAction(title: "Done", style: .default) {
             doneAction in
-            self.delegate?.categoryTableViewController(self, didFinishSelecting: "Birthday")
+            if let textField = self.alert?.textFields?[0], let categoryName = textField.text {
+                let newIndexPath = IndexPath(row: self.categories.count, section: 0)
+                self.categories.append(categoryName)
+                self.tableView.insertRows(at: [newIndexPath], with: .automatic)
+                self.updateCategoriesPropertyList()
+                self.delegate?.categoryTableViewController(self, didFinishSelecting: categoryName)
+            }
         }
         doneAction.isEnabled = false
-        
+
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert!.addAction(cancelAction)
         alert!.addAction(doneAction)
+        alert?.preferredAction = doneAction
         
         present(alert!, animated: true, completion: nil)
     }
@@ -100,34 +144,34 @@ class CategoryTableViewController: UITableViewController {
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
-        if indexPath == selectedIndexPath {
-            cell.accessoryType = .checkmark
+        if indexPath.row == categories.count {  // Add new category row
+            let addCategoryCell = tableView.dequeueReusableCell(withIdentifier: "addCategoryCell", for: indexPath)
+            return addCategoryCell
         } else {
-            cell.accessoryType = .none
-        }
-        
-        if indexPath.row == categories.count {
-            cell.textLabel?.text = "ADD BUTTON WILL GO HERE"
-            cell.accessoryType = UITableViewCell.AccessoryType.none
-        } else {
-            cell.textLabel?.text = categories[indexPath.row]
-        }
-        return cell
-    }
-    
+            let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
+            if indexPath == selectedIndexPath { // Row of the selected category
+                cell.accessoryType = .checkmark
+            } else {
+                cell.accessoryType = .none
+            }
 
-    /*
+            cell.textLabel?.text = categories[indexPath.row] // Every other normal category row
+            return cell
+        }
+    }
+
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
-        return true
+        if indexPath.row <= 5 {
+            return false
+        } else {
+            return true
+        }
     }
-    */
 
-    /*
     // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -135,7 +179,6 @@ class CategoryTableViewController: UITableViewController {
             // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
         }    
     }
-    */
 
     /*
     // Override to support rearranging the table view.
@@ -151,15 +194,4 @@ class CategoryTableViewController: UITableViewController {
         return true
     }
     */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

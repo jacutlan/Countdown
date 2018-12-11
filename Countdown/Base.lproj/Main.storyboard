@@ -167,7 +167,7 @@
                                 <action selector="cancel" destination="9Qz-2f-5Qh" id="3yA-cE-zop"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Share" style="done" id="pDV-hy-VxQ">
+                        <barButtonItem key="rightBarButtonItem" title="Share" image="Share" id="pDV-hy-VxQ">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </barButtonItem>
                     </navigationItem>
@@ -380,6 +380,26 @@
                                     </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="addCategoryCell" id="VRD-CU-K5j">
+                                <rect key="frame" x="0.0" y="72" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VRD-CU-K5j" id="wGN-yb-ECh">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666666666666664"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add New Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tec-s0-of9">
+                                            <rect key="frame" x="130.33333333333331" y="11.333333333333336" width="153.33333333333331" height="21"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                            <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="tec-s0-of9" firstAttribute="centerY" secondItem="wGN-yb-ECh" secondAttribute="centerY" id="RxX-Xt-dAc"/>
+                                        <constraint firstItem="tec-s0-of9" firstAttribute="centerX" secondItem="wGN-yb-ECh" secondAttribute="centerX" id="gRy-s5-i12"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="VwV-rt-yuw" id="Uys-l3-nVj"/>
@@ -394,7 +414,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sFG-rG-h99" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2609" y="-559"/>
+            <point key="canvasLocation" x="2608.6956521739135" y="-559.15178571428567"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="zM7-vb-IQQ">
@@ -419,4 +439,7 @@
             <point key="canvasLocation" x="-432" y="-565"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Share" width="67.5" height="67.5"/>
+    </resources>
 </document>

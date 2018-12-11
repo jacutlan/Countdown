@@ -20,6 +20,7 @@
 		443C5CFC21BBC56300B7F8A9 /* RealmSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		443C5D0021BCB7DD00B7F8A9 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */; };
 		443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */; };
+		443C5D0621BE7ECA00B7F8A9 /* Categories.plist in Resources */ = {isa = PBXBuildFile; fileRef = 443C5D0521BE7ECA00B7F8A9 /* Categories.plist */; };
 		4471AF3E21B67F5200761DAC /* RealmDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471AF3D21B67F5200761DAC /* RealmDataModel.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,7 @@
 		443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
+		443C5D0521BE7ECA00B7F8A9 /* Categories.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Categories.plist; sourceTree = "<group>"; };
 		4471AF3D21B67F5200761DAC /* RealmDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +102,7 @@
 				4400189221B26B980066EB0F /* LaunchScreen.storyboard */,
 				4400189521B26B980066EB0F /* Info.plist */,
 				4400189021B26B980066EB0F /* Assets.xcassets */,
+				443C5D0521BE7ECA00B7F8A9 /* Categories.plist */,
 			);
 			path = Countdown;
 			sourceTree = "<group>";
@@ -164,6 +167,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				443C5D0621BE7ECA00B7F8A9 /* Categories.plist in Resources */,
 				4400189421B26B980066EB0F /* LaunchScreen.storyboard in Resources */,
 				4400189121B26B980066EB0F /* Assets.xcassets in Resources */,
 				4400188F21B26B970066EB0F /* Main.storyboard in Resources */,
@@ -348,7 +352,7 @@
 		4400189921B26B980066EB0F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N9Q4HSZ5ZH;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -364,14 +368,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Jokcware.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		4400189A21B26B980066EB0F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N9Q4HSZ5ZH;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -387,7 +391,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Jokcware.Countdown;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

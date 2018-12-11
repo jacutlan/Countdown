@@ -20,7 +20,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        formatter.dateFormat = "E, d MMM yyyy"
+        formatter.dateFormat = "EEEE, d MMM yyyy"
         print("**** HomeDirectory: " + NSHomeDirectory())
         
         navigationController?.navigationBar.prefersLargeTitles = true
