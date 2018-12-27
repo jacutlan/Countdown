@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import RealmSwift
 
 class AddEventViewController: UITableViewController, UITextFieldDelegate, CategoryTableViewControllerDelegate, IconCollectionViewControllerDelegate {
     
@@ -81,31 +80,14 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     @IBAction func done() {
-        /* TODO: This really feels like it should be in the EventManager...but I couldn't figure out how to do it yet */
-        if let realmEditEvent = eventToEdit {
-            let realm = try! Realm()
-            
-            do {
-                try realm.write {
-                    realmEditEvent.name = eventNameTextField.text!
-                    realmEditEvent.date = eventDate
-                    realmEditEvent.category = categoryLabel.text!
-                    realmEditEvent.iconName = eventIcon
-                }
-            } catch {
-                print("*** Error: " + error.localizedDescription)
-            }
-
-            eventNameTextField.resignFirstResponder()            
-            delegate?.addEditEventViewController(self, didFinishUpdating: eventToEdit!)
-        } else {
-            newEvent.name = eventNameTextField.text!
-            newEvent.date = eventDate
-            newEvent.iconName = eventIcon
-            eventNameTextField.resignFirstResponder()
+        eventNameTextField.resignFirstResponder()
         
-            delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
-        }
+        newEvent.name = eventNameTextField.text!
+        newEvent.date = eventDate
+        newEvent.category = categoryLabel.text!
+        newEvent.iconName = eventIcon
+        
+        delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
     }
     
     // MARK: - DatePicker
