@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import QuartzCore
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, AddEditEventViewControllerDelegate {
     
@@ -34,20 +33,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             infoView.alpha = 0
             tableView.alpha = 0
         }
-        
-        //DispatchQueue.main.async {
+
+        DispatchQueue.main.async {
             self.loadData()
             self.configureView()
-        //}
+            self.updateLabels()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //DispatchQueue.main.async {
-            self.configureView()
-            self.updateLabels()
-        //}
+
+        self.configureView()
+        self.updateLabels()
     }
     
     // MARK: - UI
@@ -73,6 +71,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             UIView.animate(withDuration: 0.3) {
                 self.infoView.alpha = 1
                 self.tableView.alpha = 1
+                self.infoView.layer.cornerRadius = 8
             }
         }
     }
@@ -113,6 +112,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         } else {
             self.tableViewHeight.constant = maxTableViewHeight
         }
+        
+        tableView.layer.borderColor = UIColor.black.cgColor
+        tableView.layer.borderWidth = 1
     }
     
     func updateLabels() {

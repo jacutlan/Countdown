@@ -21,11 +21,6 @@ class EventCell: UITableViewCell {
         super.awakeFromNib()
         
         arrowImageView.isHidden = false
-        
-
-        
-        borderWidth = CGFloat(2.0)
-        borderColor = UIColor(white: 1, alpha: 0).cgColor
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
