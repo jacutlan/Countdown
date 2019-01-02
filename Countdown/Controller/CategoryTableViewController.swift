@@ -22,6 +22,7 @@ class CategoryTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         categories = loadCategories()
         
         if let categoryIndex = categories.firstIndex(of: selectedCategory) {
@@ -29,6 +30,11 @@ class CategoryTableViewController: UITableViewController {
         } else {
             selectedIndexPath = IndexPath(row: 0, section: 0)
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.tableFooterView = UIView()
+        tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
     }
 
     // MARK: - Table view data source

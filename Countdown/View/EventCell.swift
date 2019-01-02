@@ -15,17 +15,17 @@ class EventCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var dayCountLabel: UILabel!    
-    @IBOutlet weak var upArrowImageView: UIImageView!
-    @IBOutlet weak var downArrowImageView: UIImageView!
+    @IBOutlet weak var arrowImageView: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        upArrowImageView.isHidden = true
-        upArrowImageView.isHidden = true
-        //backgroundColor = .clear
-        //contentView.backgroundColor = .clear
-        //layer.backgroundColor = UIColor.clear.cgColor
+        arrowImageView.isHidden = false
+        
+
+        
+        borderWidth = CGFloat(2.0)
+        borderColor = UIColor(white: 1, alpha: 0).cgColor
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

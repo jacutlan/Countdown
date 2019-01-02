@@ -58,8 +58,7 @@ class IconCollectionViewController: UICollectionViewController {
             layout.minimumInteritemSpacing = padding
         }
         
-        self.collectionView.backgroundView = UIImageView(image: UIImage(named: "3"))
-        //self.tableView.backgroundView = UIImageView(image: UIImage(named: "3"))
+        self.collectionView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
     }
     
     // MARK: - UICollectionViewDelegate

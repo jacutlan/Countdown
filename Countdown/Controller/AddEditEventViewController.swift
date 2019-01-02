@@ -40,7 +40,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         super.viewWillAppear(animated)
         formatter.dateFormat = "E, d MMM yyyy"
         
-        self.tableView.backgroundView = UIImageView(image: UIImage(named: "3"))
+        self.tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
 
         if let eventToEdit = eventToEdit {
             eventDate = eventToEdit.date
