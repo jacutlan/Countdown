@@ -113,5 +113,6 @@ class IconCollectionViewController: UICollectionViewController {
     
     @IBAction func done() {
         delegate?.iconCollectionViewController(self, didFinishSelecting: selectedIcon)
+        //print("Selected icon: \(selectedIcon)")
     }
 }

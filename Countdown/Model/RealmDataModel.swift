@@ -31,7 +31,6 @@ class Event: Object {
             let days = components.day
             let hours = components.hour
             let minutes = components.minute
-            //print("\(components.day) Days and \(components.hour) Hours until the date")
             
             if days! >= 0 && hours! > 0 && minutes! > 0 {
                 return days! + 1

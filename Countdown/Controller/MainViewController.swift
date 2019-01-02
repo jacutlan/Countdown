@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, AddEditEventViewControllerDelegate {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var daysRemainingLabel: UILabel!
     @IBOutlet weak var mainEventLabel: UILabel!
@@ -72,6 +72,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.infoView.alpha = 1
                 self.tableView.alpha = 1
                 self.infoView.layer.cornerRadius = 8
+                self.infoView.layer.borderColor = UIColor.black.cgColor
+                self.infoView.layer.borderWidth = 1
             }
         }
     }
@@ -82,20 +84,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let maxTableViewHeight: CGFloat
         
         switch containerHeight {
-        case 252:   // iPhone SE
-            tableView.rowHeight = 60
+        case 248:   // iPhone SE
+            tableView.rowHeight = 61
             maxRowCount = 4
-        case 301.5: // iPhone 6, 7, 8
-            tableView.rowHeight = 58
+        case 297.5: // iPhone 6, 7, 8
+            tableView.rowHeight = 58.7
             maxRowCount = 5
-        case 336:   // 6,7,8+
-            tableView.rowHeight = 54
+        case 332:   // 6,7,8+
+            tableView.rowHeight = 54.6
             maxRowCount = 6
-        case 345:   // XS, X
-            tableView.rowHeight = 56
+        case 341:   // XS, X
+            tableView.rowHeight = 56.1
             maxRowCount = 6
-        case 387:   // XR, XS Max
-            tableView.rowHeight = 62
+        case 383:   // XR, XS Max
+            tableView.rowHeight = 62.8
             maxRowCount = 6
         default:    // Nokia 3210
             tableView.rowHeight = 60
@@ -105,12 +107,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         maxTableViewHeight = CGFloat(maxRowCount) * tableView.rowHeight
 
         if CGFloat(eventsArray.count) * tableView.rowHeight <= maxTableViewHeight {
+            self.tableView.isScrollEnabled = false
+            
             self.tableViewHeight.constant = CGFloat(self.eventsArray.count) * self.tableView.rowHeight
             UIView.animate(withDuration: 0.2) {
                 self.view.layoutIfNeeded()
             }
         } else {
             self.tableViewHeight.constant = maxTableViewHeight
+            self.tableView.isScrollEnabled = true
         }
         
         tableView.layer.borderColor = UIColor.black.cgColor
@@ -171,14 +176,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             controller.delegate = self
         }
         
+        if segue.identifier == "EditEvent" {
+            let controller = segue.destination as! AddEventViewController
+            controller.delegate = self
+            controller.eventToEdit = sender as? Event
+            controller.title = "Edit Event"
+        }
+        
         if segue.identifier == "ShowEventDetail" {
-            //let selectedIndexPath = sender as? IndexPath()
             let selectedEvent = eventsArray[(tableView.indexPathForSelectedRow!.row)]
             
             let controller = segue.destination as! EventDetailViewController
             controller.event = selectedEvent
+            controller.delegate = self
         }
     }
+    
     
     // MARK: - TableView Delegate
     
@@ -190,7 +203,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             cell.cellImageView.image = event.icon
             cell.titleLabel.text = event.name
             cell.dateLabel.text = formatter.string(from: event.date)
-            cell.accessoryType = .disclosureIndicator
+            cell.accessoryType = .none
             cell.dayCountLabel.text = String(abs(event.dayCount))
             cell.arrowImageView.image = event.dayCount < 0 ? UIImage(named: "UpArrow") : UIImage(named: "DownArrow")
         }
@@ -230,9 +243,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
-    
-    // MARK: - EventDetailViewControllerDelegate
-    
+}
+
+// MARK: - AddEditEventViewController Delegate
+extension MainViewController: AddEditEventViewControllerDelegate {
     func addEditEventViewControllerDidCancel(_ controller: AddEventViewController) {
         controller.navigationController?.popViewController(animated: true)
     }
@@ -252,4 +266,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func addEditEventViewController(_ controller: AddEventViewController, didFinishUpdating event: Event) {}
+}
+
+extension MainViewController: EventDetailViewControllerDelegate {
+    func eventDetailViewControllerDismissed(_ controller: EventDetailViewController) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func eventDetailViewController(_ controller: EventDetailViewController, editing editingEvent: Event) {
+        controller.dismiss(animated: true) {
+            self.performSegue(withIdentifier: "EditEvent", sender: editingEvent)
+        }
+    }
+    
+    
 }

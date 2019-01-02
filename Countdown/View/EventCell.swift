@@ -19,8 +19,6 @@ class EventCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        arrowImageView.isHidden = false
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

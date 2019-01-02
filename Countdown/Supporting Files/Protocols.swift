@@ -17,6 +17,11 @@ protocol IconCollectionViewControllerDelegate: class {
     func iconCollectionViewController(_ controller: IconCollectionViewController, didFinishSelecting icon: String)
 }
 
+protocol EventDetailViewControllerDelegate: class {
+    func eventDetailViewControllerDismissed(_ controller: EventDetailViewController)
+    func eventDetailViewController(_ controller: EventDetailViewController, editing editingEvent: Event)
+}
+
 extension UIImageView {
     func setImageColor(color: UIColor) {
         let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)

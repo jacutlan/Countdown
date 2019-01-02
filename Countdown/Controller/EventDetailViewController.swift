@@ -8,16 +8,19 @@
 
 import UIKit
 
-class EventDetailViewController: UIViewController, AddEditEventViewControllerDelegate {
+class EventDetailViewController: UIViewController {
     
     @IBOutlet weak var daysRemainingLabel: UILabel!
     @IBOutlet weak var daysUntilSinceLabel: UILabel!
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var eventDateLabel: UILabel!
     @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var navigationBar: UINavigationBar!
     
     var event: Event!
     let dateFormatter = DateFormatter()
+    weak var delegate: EventDetailViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +29,13 @@ class EventDetailViewController: UIViewController, AddEditEventViewControllerDel
         updateLabels()
         self.navigationItem.title = event.name
         
-        stackView.layer.borderWidth = 1
-        stackView.layer.borderColor = UIColor.blue.cgColor
+        containerView.layer.borderColor = UIColor.black.cgColor
+        containerView.layer.borderWidth = 1
+        containerView.layer.cornerRadius = 8
+        
+        navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationBar.shadowImage = UIImage()
+        navigationBar.isTranslucent = true
     }
     
     func updateLabels() {
@@ -47,37 +55,14 @@ class EventDetailViewController: UIViewController, AddEditEventViewControllerDel
             daysUntilSinceLabel.text = "Today's the Day!"
         }
     }
-    
-    // MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "EditEvent" {
-            let controller = segue.destination as? AddEventViewController
-            controller?.delegate = self
-            controller?.eventToEdit = event
-            controller?.navigationItem.title = "Edit Event"
-        }
-    }
-    
+
     // MARK: - Actions
     
-    @IBAction func cancel() {
-        self.navigationController?.popViewController(animated: true)
+    @IBAction func done() {
+        delegate?.eventDetailViewControllerDismissed(self)
     }
     
-    // MARK: - AddEditEventViewControllerDelegate
-    
-    func addEditEventViewControllerDidCancel(_ controller: AddEventViewController) {
-        controller.navigationController?.popViewController(animated: true)
+    @IBAction func edit() {
+        delegate?.eventDetailViewController(self, editing: event)
     }
-    
-    func addEditEventViewController(_ controller: AddEventViewController, didFinishUpdating event: Event) {
-        controller.navigationController?.popViewController(animated: true)
-        print("Event title from the delegate is: \(event.name)")
-        title = event.name
-        self.event = event
-        updateLabels()
-    }
-    
-    func addEditEventDetailViewController(_ controller: AddEventViewController, didFinishAdding event: Event) {}
 }

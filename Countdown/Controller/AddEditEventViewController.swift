@@ -187,7 +187,6 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     // MARK: - TextFieldDelegate
-    // TODO: App cannot handle deletion of emojis with 3rd party keyboard. Apple keyboard works fine. WHAT THE HELL!
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let oldText = textField.text!
 
@@ -234,14 +233,11 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     func iconCollectionViewController(_ controller: IconCollectionViewController, didFinishSelecting icon: String) {
-        eventIcon = icon
+        self.eventIcon = icon
+        self.eventIconImageView.image = UIImage(named: icon)
+        print("Icon Selected: \(icon)")
+        controller.navigationController?.popViewController(animated: true)
+
         
-        eventIconImageView.image = UIImage(named: icon)
-        
-        if eventToEdit != nil {
-            controller.navigationController?.popToRootViewController(animated: true)
-        } else {
-            controller.navigationController?.popViewController(animated: true)
-        }
     }
 }
