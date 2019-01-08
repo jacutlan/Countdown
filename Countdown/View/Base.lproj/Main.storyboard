@@ -49,22 +49,28 @@
                                 <rect key="frame" x="4" y="92" width="367" height="341"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XYD-HA-tHp">
-                                        <rect key="frame" x="95.333333333333329" y="74.333333333333329" width="176.66666666666669" height="192.33333333333337"/>
+                                        <rect key="frame" x="10" y="60.333333333333357" width="347" height="220.66666666666663"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f4h-QE-9Aw" userLabel="Countdown Display">
-                                                <rect key="frame" x="29.666666666666671" y="0.0" width="117.00000000000001" height="124"/>
+                                                <rect key="frame" x="115" y="0.0" width="117" height="124"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="105"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Main Event Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1yy-nL-LnL">
-                                                <rect key="frame" x="0.0" y="131.99999999999997" width="176.66666666666666" height="31"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="26"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Days Until/Since" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fcd-hm-ETN">
+                                                <rect key="frame" x="111" y="131.99999999999997" width="125" height="20.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Main Event Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1yy-nL-LnL">
+                                                <rect key="frame" x="77.333333333333329" y="160.33333333333334" width="192.33333333333337" height="31"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="26"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Monday, Jan 01 2019" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bJe-tS-FPk" userLabel="Main Event Date">
-                                                <rect key="frame" x="3.6666666666666714" y="170.99999999999997" width="169" height="21.333333333333343"/>
+                                                <rect key="frame" x="89" y="199.33333333333334" width="169" height="21.333333333333343"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -75,8 +81,10 @@
                                 <color key="backgroundColor" white="0.81712863869863017" alpha="0.3477632705479452" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" white="1" alpha="0.057336258561643837" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
+                                    <constraint firstItem="XYD-HA-tHp" firstAttribute="leading" secondItem="tIg-zb-bCS" secondAttribute="leading" constant="10" id="0d9-Ff-gpP"/>
                                     <constraint firstItem="XYD-HA-tHp" firstAttribute="centerX" secondItem="tIg-zb-bCS" secondAttribute="centerX" id="1xt-Dj-3iU"/>
                                     <constraint firstItem="XYD-HA-tHp" firstAttribute="centerY" secondItem="tIg-zb-bCS" secondAttribute="centerY" id="2L0-2n-jUl"/>
+                                    <constraint firstAttribute="trailing" secondItem="XYD-HA-tHp" secondAttribute="trailing" constant="10" id="5sP-dH-ReP"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -94,7 +102,7 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="My Events" largeTitleDisplayMode="always" id="CPF-tf-jmG">
-                        <barButtonItem key="leftBarButtonItem" title="Settings" id="4ZF-iW-5cd">
+                        <barButtonItem key="leftBarButtonItem" enabled="NO" title="Settings" style="done" id="4ZF-iW-5cd">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="3Zu-AX-iTg">
@@ -106,6 +114,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="daysRemainingLabel" destination="f4h-QE-9Aw" id="EJ0-Jk-qCX"/>
+                        <outlet property="daysUntilSinceLabel" destination="Fcd-hm-ETN" id="e9C-pO-zBO"/>
                         <outlet property="infoView" destination="tIg-zb-bCS" id="uLR-Qs-N6y"/>
                         <outlet property="mainEventDateLabel" destination="bJe-tS-FPk" id="SGv-1o-yBn"/>
                         <outlet property="mainEventLabel" destination="1yy-nL-LnL" id="XCC-jo-BdK"/>
@@ -132,31 +141,31 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IjF-eH-EL4" userLabel="ContainerView">
-                                <rect key="frame" x="46" y="225.33333333333334" width="283" height="361.33333333333326"/>
+                                <rect key="frame" x="40" y="225.33333333333334" width="295" height="361.33333333333326"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="w3R-Wn-SVh">
-                                        <rect key="frame" x="50" y="49.999999999999972" width="183" height="261.33333333333326"/>
+                                        <rect key="frame" x="50" y="49.999999999999972" width="195" height="261.33333333333326"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2sk-tr-YcV" userLabel="Countdown Display">
-                                                <rect key="frame" x="33" y="0.0" width="117" height="124"/>
+                                                <rect key="frame" x="39" y="0.0" width="117" height="124"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="105"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Days Until/Since" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twV-07-UMh">
-                                                <rect key="frame" x="0.0" y="142" width="183" height="31"/>
+                                                <rect key="frame" x="6" y="142" width="183" height="31"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="26"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Event" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zg9-Xh-02q">
-                                                <rect key="frame" x="35.666666666666657" y="191" width="112" height="31"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="The Event" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zg9-Xh-02q">
+                                                <rect key="frame" x="41.666666666666657" y="191" width="112" height="31"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="26"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Monday, Jan 01 2019" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WP1-8s-Oqc" userLabel="Main Event Date">
-                                                <rect key="frame" x="7" y="240.00000000000006" width="169" height="21.333333333333314"/>
+                                                <rect key="frame" x="13" y="240.00000000000006" width="169" height="21.333333333333314"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -201,6 +210,8 @@
                         <constraints>
                             <constraint firstItem="IjF-eH-EL4" firstAttribute="centerY" secondItem="4Tm-BX-kBh" secondAttribute="centerY" id="TWG-Ca-wIp"/>
                             <constraint firstItem="IjF-eH-EL4" firstAttribute="centerX" secondItem="4Tm-BX-kBh" secondAttribute="centerX" id="WfY-zr-DyQ"/>
+                            <constraint firstItem="IjF-eH-EL4" firstAttribute="leading" secondItem="gvp-qS-mMX" secondAttribute="leading" constant="40" id="mTH-xt-ebF"/>
+                            <constraint firstItem="gvp-qS-mMX" firstAttribute="trailing" secondItem="IjF-eH-EL4" secondAttribute="trailing" constant="40" id="qyo-Tp-0B5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="gvp-qS-mMX"/>
                     </view>
@@ -240,11 +251,11 @@
         <scene sceneID="Pa0-97-FN9">
             <objects>
                 <collectionViewController id="X0K-3Q-145" customClass="IconCollectionViewController" customModule="Countdown" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="LIW-go-9Yg">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" dataMode="prototypes" id="LIW-go-9Yg">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="DeV-xV-jRa">
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="layoutMargins" id="DeV-xV-jRa">
                             <size key="itemSize" width="128" height="128"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -252,7 +263,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="IconCell" id="HVg-7h-oGM" customClass="IconCell" customModule="Countdown" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <rect key="frame" x="8" y="96" width="100" height="100"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                     <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
@@ -287,12 +298,6 @@
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
                                 <action selector="cancel" destination="X0K-3Q-145" id="Pwa-Vf-G8f"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="I3J-Uc-CLN">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <connections>
-                                <action selector="done" destination="X0K-3Q-145" id="Gvk-bH-1CH"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -547,10 +552,16 @@
                                 <action selector="cancel" destination="VwV-rt-yuw" id="YFl-2H-SuO"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="edit" id="h0q-XW-ZfC">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="h0q-XW-ZfC">
                             <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="doneButtonPressed:" destination="VwV-rt-yuw" id="Yn5-Ej-MLK"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="doneBarButton" destination="h0q-XW-ZfC" id="FfF-zy-iVn"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sFG-rG-h99" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

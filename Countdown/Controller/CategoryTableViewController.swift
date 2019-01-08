@@ -14,21 +14,23 @@ class CategoryTableViewController: UITableViewController {
     
     var alert: UIAlertController?
     var categories = [String]()
-    var selectedCategory: String!
+    var selectedCategory: String?
     var selectedIndexPath: IndexPath?
     
     let defaults = UserDefaults.standard
+    
+    @IBOutlet weak var doneBarButton: UIBarButtonItem!
     weak var delegate: CategoryTableViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         categories = loadCategories()
-        
-        if let categoryIndex = categories.firstIndex(of: selectedCategory) {
+        tableView.rowHeight = 44
+        doneBarButton.isEnabled = selectedCategory != nil
+
+        if let selectedCategory = self.selectedCategory, let categoryIndex = categories.firstIndex(of: selectedCategory) {
             selectedIndexPath = IndexPath(row: categoryIndex, section: 0)
-        } else {
-            selectedIndexPath = IndexPath(row: 0, section: 0)
         }
     }
     
@@ -68,7 +70,8 @@ class CategoryTableViewController: UITableViewController {
             return
         }
         
-        if let oldCell = tableView.cellForRow(at: selectedIndexPath!) {
+        
+        if let selectedIndexPath = self.selectedIndexPath, let oldCell = tableView.cellForRow(at: selectedIndexPath) {
             if indexPath != addCategoryRow {
                 oldCell.accessoryType = .none
             }
@@ -77,16 +80,18 @@ class CategoryTableViewController: UITableViewController {
         if let newCell = tableView.cellForRow(at: indexPath) {
             if indexPath != addCategoryRow {
                 newCell.accessoryType = .checkmark
-                //newCell.backgroundColor = UIColor(red: 223/255, green: 249/255, blue: 251/255, alpha: 1)
                 selectedIndexPath = indexPath
                 selectedCategory = categories[selectedIndexPath!.row]
-                delegate?.categoryTableViewController(self, didFinishSelecting: selectedCategory)
+                delegate?.categoryTableViewController(self, didFinishSelecting: selectedCategory!)
             }
         }
         
         if indexPath == addCategoryRow {
+            if let selectedIndexPath = self.selectedIndexPath {
+                tableView.cellForRow(at: selectedIndexPath)?.accessoryType = .none
+            }
+
             addCategory()
-            tableView.cellForRow(at: selectedIndexPath!)?.accessoryType = .none
         }
     }
     
@@ -112,11 +117,9 @@ class CategoryTableViewController: UITableViewController {
                 self.categories.append(categoryName)
                 
                 self.tableView.beginUpdates()
-                //self.tableView(self.tableView, cellForRowAt: self.selectedIndexPath!).accessoryType = .none
                 self.tableView.insertRows(at: [newIndexPath], with: .automatic)
                 self.selectedIndexPath = newIndexPath
                 self.tableView(self.tableView, cellForRowAt: newIndexPath).accessoryType = .checkmark
-                
                 self.tableView.endUpdates()
                 
                 self.saveCategories()
@@ -127,8 +130,16 @@ class CategoryTableViewController: UITableViewController {
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) {
             cancelAction in
-            self.tableView.cellForRow(at: self.selectedIndexPath!)?.accessoryType = .checkmark
+            if let selectedIndexPath = self.selectedIndexPath {
+                let selectedCell = self.tableView(self.tableView, cellForRowAt: selectedIndexPath)
+                selectedCell.accessoryType = .checkmark
+                
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
         }
+        
         alert!.addAction(cancelAction)
         alert!.addAction(doneAction)
         alert?.preferredAction = doneAction
@@ -140,6 +151,11 @@ class CategoryTableViewController: UITableViewController {
         delegate?.categoryTableViewControllerDidCancel(self)
     }
     
+    @IBAction func doneButtonPressed(_ sender: Any) {
+        delegate?.categoryTableViewController(self, didFinishSelecting: selectedCategory!)
+    }
+    
+    
     @objc func textDidChange(_ textField: UITextField) {
         if let text = textField.text, text.count > 0 {
             alert?.actions[1].isEnabled = textField.text!.count > 0
@@ -148,7 +164,6 @@ class CategoryTableViewController: UITableViewController {
         }
     }
     
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == categories.count {  // Add new category row
             let addCategoryCell = tableView.dequeueReusableCell(withIdentifier: "addCategoryCell", for: indexPath)
@@ -156,7 +171,7 @@ class CategoryTableViewController: UITableViewController {
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
             if indexPath == selectedIndexPath { // Row of the selected category
-                cell.accessoryType = .none//.checkmark
+                cell.accessoryType = .checkmark
             } else {
                 cell.accessoryType = .none
             }
@@ -176,7 +191,6 @@ class CategoryTableViewController: UITableViewController {
         }
     }
 
-    // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             if indexPath == selectedIndexPath {
@@ -186,11 +200,7 @@ class CategoryTableViewController: UITableViewController {
             }
             categories.remove(at: indexPath.row)
             saveCategories()
-            delegate?.categoryTableViewController(self, didFinishSelecting: selectedCategory)
             tableView.deleteRows(at: [indexPath], with: .fade)
-
         }
-        
-        // TODO: What happens if you delete the currently selected row?
     }
 }

@@ -21,56 +21,76 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     var datePickerVisible = false
     
-    var newEvent = Event()
     var eventToEdit: Event?
-    var eventDate = Date()
-    var eventIcon = "icons8-birthday"
+    
+    var eventName: String?
+    var eventDate: Date?
+    var selectedIcon: String?
+    var selectedCategory: String?
 
     let formatter = DateFormatter()
+    let eventDateRow = IndexPath(row: 2, section: 1)
 
-    
     weak var delegate: AddEditEventViewControllerDelegate?
+    
+    // MARK: - Lifecycle Hooks
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.prefersLargeTitles = false
+  
+        self.tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
+        formatter.dateFormat = "E, d MMM yyyy"
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        formatter.dateFormat = "E, d MMM yyyy"
+        eventIconImageView.layer.borderWidth = 1
+        eventIconImageView.layer.borderColor = UIColor.black.cgColor
+        eventIconImageView.layer.cornerRadius = 8
+        eventIconImageView.contentMode = .scaleAspectFill
         
-        self.tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
-
-        if let eventToEdit = eventToEdit {
-            eventDate = eventToEdit.date
-            
-            eventNameTextField.text = eventToEdit.name
-            categoryLabel.text = eventToEdit.category
-            eventDateLabel.text = formatter.string(from: eventToEdit.date)
-            eventIconImageView.image = eventToEdit.icon
-            doneBarButton.isEnabled = true
-        }
-
         if eventToEdit == nil {
-            categoryLabel.text = newEvent.category
-            eventNameTextField.becomeFirstResponder()
+            categoryLabel.text = selectedCategory ?? "Select Category"
+            
+            if let selectedIcon = self.selectedIcon {
+                eventIconImageView.image = UIImage(named: selectedIcon)?.imageWithInsets(insetDimension: 8)
+            } else {
+                eventIconImageView.image = UIImage()    // New events will have no icon to begin with!
+            }
+            
+            if let eventDate = self.eventDate {
+                eventDateLabel.text = formatter.string(from: eventDate)
+            } else {
+                eventDateLabel.text = "Select Date"
+            }
+            
+            if eventNameTextField.text!.isEmpty {
+                eventNameTextField.becomeFirstResponder()
+            }
+            
+        } else {
+            eventNameTextField.text = eventName
+            eventDateLabel.text = formatter.string(from: eventDate!)
+            categoryLabel.text = selectedCategory
+            eventIconImageView.image = UIImage(named: selectedIcon!)?.imageWithInsets(insetDimension: 8)
+            
+            doneBarButton.isEnabled = true
         }
     }
     
     // MARK: - Navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        hideDatePicker()
+        
         if segue.identifier == "PickCategory" {
             let controller = segue.destination as! CategoryTableViewController
             controller.delegate = self
-            controller.selectedCategory = newEvent.category
+            controller.selectedCategory = selectedCategory
         }
         
         if segue.identifier == "SelectIcon" {
             let controller = segue.destination as! IconCollectionViewController
             controller.delegate = self
-            controller.selectedIcon = newEvent.iconName
+            controller.selectedIcon = selectedIcon ?? nil
         }
     }
     
@@ -88,9 +108,9 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             do {
                 try realm.write {
                     realmEditEvent.name = eventNameTextField.text!
-                    realmEditEvent.date = eventDate
-                    realmEditEvent.category = categoryLabel.text!
-                    realmEditEvent.iconName = eventIcon
+                    realmEditEvent.date = eventDate!
+                    realmEditEvent.category = selectedCategory!
+                    realmEditEvent.iconName = selectedIcon!
                 }
             } catch {
                 print("*** Error: " + error.localizedDescription)
@@ -99,12 +119,18 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             eventNameTextField.resignFirstResponder()            
             delegate?.addEditEventViewController(self, didFinishUpdating: eventToEdit!)
         } else {
-            newEvent.name = eventNameTextField.text!
-            newEvent.date = eventDate
-            newEvent.iconName = eventIcon
-            eventNameTextField.resignFirstResponder()
-        
-            delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
+            if let date = eventDate, let icon = selectedIcon, let category = selectedCategory {
+                let newEvent = Event()
+                
+                newEvent.name = eventNameTextField.text!
+                newEvent.date = date
+                newEvent.category = category
+                newEvent.iconName = icon
+                delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
+            } else {
+                print("SOMETHING IS MISSING!")
+                return
+            }
         }
     }
     
@@ -127,7 +153,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     @IBAction func dateChanged(_ datePicker: UIDatePicker) {
         eventDate = datePicker.date
-        eventDateLabel.text = formatter.string(from: eventDate)
+        eventDateLabel.text = formatter.string(from: eventDate!)
     }
 
     // MARK: - TableView Overrides
@@ -136,7 +162,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         tableView.deselectRow(at: indexPath, animated: true)
         eventNameTextField.resignFirstResponder()
         
-        if indexPath.section == 1 && indexPath.row == 2 {
+        if indexPath == eventDateRow {
             if !datePickerVisible {
                 showDatePicker()
             } else {
@@ -169,14 +195,13 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         }
     }
     
-    /*override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if (indexPath.section == 1 && indexPath.row == 2) || (indexPath.section == 1 && indexPath.row == 0) { // Row of the Event Date + Category cells
-            return indexPath
-        } else {
-            return nil
-        }
-    }*/
-    
+    // Customise the tableview header colour
+    override func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        let header = view as! UITableViewHeaderFooterView
+        header.textLabel?.textColor = UIColor.white
+    }
+
+    // Something I learned from iOS apprentice - necessary for the date picker toggling to work
     override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
         var newIndexPath = indexPath
         if indexPath.section == 1 && indexPath.row == 3 {
@@ -220,24 +245,24 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     func categoryTableViewController(_ controller: CategoryTableViewController, didFinishSelecting category: String) {
         // set the event category
-        newEvent.category = category
+        selectedCategory = category
+        categoryLabel.text = category
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             controller.navigationController?.popViewController(animated: true)
         }
     }
     
     // MARK: - IconCollectionViewControllerDelegate
-    
     func iconCollectionViewControllerDidCancel(_ controller: IconCollectionViewController) {
         controller.navigationController?.popViewController(animated: true)
     }
     
     func iconCollectionViewController(_ controller: IconCollectionViewController, didFinishSelecting icon: String) {
-        self.eventIcon = icon
-        self.eventIconImageView.image = UIImage(named: icon)
-        print("Icon Selected: \(icon)")
-        controller.navigationController?.popViewController(animated: true)
-
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            controller.navigationController?.popViewController(animated: true)
+        }
         
+        selectedIcon = icon
+        eventIconImageView.image = UIImage(named: icon)
     }
 }

@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import SwipeCellKit
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var daysRemainingLabel: UILabel!
+    @IBOutlet weak var daysUntilSinceLabel: UILabel!
     @IBOutlet weak var mainEventLabel: UILabel!
     @IBOutlet weak var mainEventDateLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
@@ -34,18 +36,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             tableView.alpha = 0
         }
 
-        DispatchQueue.main.async {
-            self.loadData()
-            self.configureView()
-            self.updateLabels()
-        }
+//        DispatchQueue.main.async {
+//            self.loadData()
+//            self.configureView()
+//            self.updateLabels()
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+                DispatchQueue.main.async {
+                    self.loadData()
+                    self.configureView()
+                    self.updateLabels()
+                }
 
-        self.configureView()
-        self.updateLabels()
     }
     
     // MARK: - UI
@@ -127,10 +132,13 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             switch eventsArray[0].dayCount {
             case 1...:
                 daysRemainingLabel.text = String(abs(eventsArray[0].dayCount))
+                daysUntilSinceLabel.text = "Days Until"
             case 0:
-                daysRemainingLabel.text = "Today"
+                daysRemainingLabel.text = "0"
+                daysUntilSinceLabel.text = "It's Today!"
             case ..<0:
-                daysRemainingLabel.text = "Gone"
+                daysRemainingLabel.text = String(abs(eventsArray[0].dayCount))
+                daysUntilSinceLabel.text = "Days Since"
             default:
                 daysRemainingLabel.text = "?"
             }
@@ -156,6 +164,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func loadData() {
         if let events = EventManager.shared.getEvents() {
             eventsArray = events
+            sortData()
             
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -178,9 +187,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         if segue.identifier == "EditEvent" {
             let controller = segue.destination as! AddEventViewController
-            controller.delegate = self
-            controller.eventToEdit = sender as? Event
-            controller.title = "Edit Event"
+            
+            if let editingEvent = sender as? Event {
+                print("You're about to edit the event: \(editingEvent.name)")
+                
+                controller.delegate = self
+                controller.eventToEdit = editingEvent
+                controller.eventName = editingEvent.name
+                controller.eventDate = editingEvent.date
+                controller.selectedIcon = editingEvent.iconName
+                controller.selectedCategory = editingEvent.category
+                controller.title = "Edit Event"
+            }
         }
         
         if segue.identifier == "ShowEventDetail" {
@@ -197,6 +215,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventCell
+        
+        cell.delegate = self
+        cell.preservesSuperviewLayoutMargins = false
+        cell.separatorInset = UIEdgeInsets.zero
+        cell.layoutMargins = UIEdgeInsets.zero
 
         if !eventsArray.isEmpty {
             let event = eventsArray[indexPath.row]
@@ -222,23 +245,23 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return eventsArray.count
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        
-        if editingStyle == .delete {
-            let eventToDelete = self.eventsArray[indexPath.row]
-        
-            DispatchQueue.main.async {
-                self.tableView.beginUpdates()
-                EventManager.shared.deleteEvent(eventToDelete)
-                self.eventsArray.remove(at: indexPath.row)
-                self.tableView.deleteRows(at: [indexPath], with: .fade)
-
-                self.configureView()
-                self.updateLabels()
-                self.tableView.endUpdates()
-            }
-        }
-    }
+//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+//
+//        if editingStyle == .delete {
+//            let eventToDelete = self.eventsArray[indexPath.row]
+//
+//            DispatchQueue.main.async {
+//                self.tableView.beginUpdates()
+//                EventManager.shared.deleteEvent(eventToDelete)
+//                self.eventsArray.remove(at: indexPath.row)
+//                self.tableView.deleteRows(at: [indexPath], with: .fade)
+//
+//                self.configureView()
+//                self.updateLabels()
+//                self.tableView.endUpdates()
+//            }
+//        }
+//    }
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -265,7 +288,12 @@ extension MainViewController: AddEditEventViewControllerDelegate {
         controller.navigationController?.popViewController(animated: true)
     }
     
-    func addEditEventViewController(_ controller: AddEventViewController, didFinishUpdating event: Event) {}
+    func addEditEventViewController(_ controller: AddEventViewController, didFinishUpdating event: Event) {
+        loadData()
+        configureView()
+        updateLabels()
+        controller.navigationController?.popViewController(animated: true)
+    }
 }
 
 extension MainViewController: EventDetailViewControllerDelegate {
@@ -278,6 +306,47 @@ extension MainViewController: EventDetailViewControllerDelegate {
             self.performSegue(withIdentifier: "EditEvent", sender: editingEvent)
         }
     }
+}
+
+extension MainViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        if orientation == .right {
+            let deleteAction = SwipeAction(style: .destructive, title: nil) { (action, indexPath) in
+                //Delete an event by swiping from the right
+                
+                let eventToDelete = self.eventsArray[indexPath.row]
+                
+                EventManager.shared.deleteEvent(eventToDelete)
+                self.eventsArray.remove(at: indexPath.row)
+                self.configureView()
+                self.updateLabels()
+                action.fulfill(with: .delete)
+            }
+            
+            deleteAction.image = UIImage(named: "Trash")
+            
+            return [deleteAction]
+        } else {
+            let editAction = SwipeAction(style: .default, title: nil) { (action, indexPath) in
+                // Edit an event by swiping from the left
+            }
+            
+            editAction.image = UIImage(named: "Edit")
+            editAction.backgroundColor = UIColor.yellow
+            
+            return [editAction]
+        }
+    }
     
-    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeTableOptions()
+        
+        if orientation == .right {
+            options.expansionStyle = .destructive
+        } else {
+            options.expansionStyle = .selection
+        }
+
+        return options
+    }
 }

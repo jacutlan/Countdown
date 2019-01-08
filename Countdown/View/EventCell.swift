@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SwipeCellKit
 
-class EventCell: UITableViewCell {
+class EventCell: SwipeTableViewCell {
     
 
     @IBOutlet weak var cellImageView: UIImageView!

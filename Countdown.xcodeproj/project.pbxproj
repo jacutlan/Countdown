@@ -22,12 +22,14 @@
 		443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */; };
 		443C5D0B21C09B0D00B7F8A9 /* EventCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443C5D0921C09B0D00B7F8A9 /* EventCell.swift */; };
 		443C5D0C21C09B0D00B7F8A9 /* EventCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 443C5D0A21C09B0D00B7F8A9 /* EventCell.xib */; };
+		444A1F4A21DD8196000AABEE /* UIImage+Insets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 444A1F4921DD8196000AABEE /* UIImage+Insets.swift */; };
 		4469BE8D21CDF4070028A2D5 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4469BE8C21CDF4070028A2D5 /* Default-568h@2x.png */; };
 		4469BE8F21CDF7760028A2D5 /* IconCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469BE8E21CDF7760028A2D5 /* IconCollectionViewController.swift */; };
 		4469BE9121CE0EA90028A2D5 /* IconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469BE9021CE0EA90028A2D5 /* IconCell.swift */; };
 		4469BE9321CE111F0028A2D5 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4469BE9221CE111F0028A2D5 /* Protocols.swift */; };
 		4469BE9521CE1BE50028A2D5 /* IconCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4469BE9421CE1BE50028A2D5 /* IconCell.xib */; };
 		4471AF3E21B67F5200761DAC /* RealmDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471AF3D21B67F5200761DAC /* RealmDataModel.swift */; };
+		8C11DE4A8A5131AE27A996B8 /* Pods_Countdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4B8C017270E549F6E11729 /* Pods_Countdown.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,12 +63,16 @@
 		443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailViewController.swift; sourceTree = "<group>"; };
 		443C5D0921C09B0D00B7F8A9 /* EventCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCell.swift; sourceTree = "<group>"; };
 		443C5D0A21C09B0D00B7F8A9 /* EventCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventCell.xib; sourceTree = "<group>"; };
+		444A1F4921DD8196000AABEE /* UIImage+Insets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Insets.swift"; sourceTree = "<group>"; };
 		4469BE8C21CDF4070028A2D5 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		4469BE8E21CDF7760028A2D5 /* IconCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCollectionViewController.swift; sourceTree = "<group>"; };
 		4469BE9021CE0EA90028A2D5 /* IconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCell.swift; sourceTree = "<group>"; };
 		4469BE9221CE111F0028A2D5 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		4469BE9421CE1BE50028A2D5 /* IconCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IconCell.xib; sourceTree = "<group>"; };
 		4471AF3D21B67F5200761DAC /* RealmDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataModel.swift; sourceTree = "<group>"; };
+		6F4B8C017270E549F6E11729 /* Pods_Countdown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Countdown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4902BCB96858849A77B41A5 /* Pods-Countdown.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Countdown.release.xcconfig"; path = "Pods/Target Support Files/Pods-Countdown/Pods-Countdown.release.xcconfig"; sourceTree = "<group>"; };
+		E8A7EAFEAA69D41E09FEBCB3 /* Pods-Countdown.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Countdown.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Countdown/Pods-Countdown.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +82,7 @@
 			files = (
 				443C5CFB21BBC56300B7F8A9 /* RealmSwift.framework in Frameworks */,
 				443C5CF921BBC56300B7F8A9 /* Realm.framework in Frameworks */,
+				8C11DE4A8A5131AE27A996B8 /* Pods_Countdown.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +97,8 @@
 				443C5CF821BBC56300B7F8A9 /* RealmSwift.framework */,
 				4400188821B26B970066EB0F /* Countdown */,
 				4400188721B26B970066EB0F /* Products */,
+				71E0632DAB352A65AAAA72A1 /* Pods */,
+				996A9CE1B89569C770220C3C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -151,10 +160,44 @@
 		4469BE8B21CDF3B10028A2D5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				447A199521E352F3008A6712 /* Icons */,
 				4400188921B26B970066EB0F /* AppDelegate.swift */,
 				4469BE9221CE111F0028A2D5 /* Protocols.swift */,
+				444A1F4921DD8196000AABEE /* UIImage+Insets.swift */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		447A199521E352F3008A6712 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				447A199621E35302008A6712 /* Animals */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
+		447A199621E35302008A6712 /* Animals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Animals;
+			sourceTree = "<group>";
+		};
+		71E0632DAB352A65AAAA72A1 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E8A7EAFEAA69D41E09FEBCB3 /* Pods-Countdown.debug.xcconfig */,
+				D4902BCB96858849A77B41A5 /* Pods-Countdown.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		996A9CE1B89569C770220C3C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6F4B8C017270E549F6E11729 /* Pods_Countdown.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,11 +207,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4400189821B26B980066EB0F /* Build configuration list for PBXNativeTarget "Countdown" */;
 			buildPhases = (
+				BF3E48BDB2216091C458AB54 /* [CP] Check Pods Manifest.lock */,
 				4400188221B26B970066EB0F /* Sources */,
 				4400188321B26B970066EB0F /* Frameworks */,
 				4400188421B26B970066EB0F /* Resources */,
 				443C5CFD21BBC56300B7F8A9 /* Embed Frameworks */,
 				443C5CFE21BBD22B00B7F8A9 /* ShellScript */,
+				CEE0EE6B62EE64F803275D10 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -246,6 +291,50 @@
 			shellPath = /bin/sh;
 			shellScript = "bash \"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Realm.framework/strip-frameworks.sh\"\n";
 		};
+		BF3E48BDB2216091C458AB54 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Countdown-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CEE0EE6B62EE64F803275D10 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Countdown/Pods-Countdown-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Countdown/Pods-Countdown-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -254,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4471AF3E21B67F5200761DAC /* RealmDataModel.swift in Sources */,
+				444A1F4A21DD8196000AABEE /* UIImage+Insets.swift in Sources */,
 				4469BE8F21CDF7760028A2D5 /* IconCollectionViewController.swift in Sources */,
 				4400189E21B3505F0066EB0F /* EventManager.swift in Sources */,
 				4469BE9321CE111F0028A2D5 /* Protocols.swift in Sources */,
@@ -407,6 +497,7 @@
 		};
 		4400189921B26B980066EB0F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E8A7EAFEAA69D41E09FEBCB3 /* Pods-Countdown.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -430,6 +521,7 @@
 		};
 		4400189A21B26B980066EB0F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D4902BCB96858849A77B41A5 /* Pods-Countdown.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
