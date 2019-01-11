@@ -8,6 +8,7 @@
 
 import UIKit
 import SwipeCellKit
+import BTNavigationDropdownMenu
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -34,32 +35,31 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if eventsArray.isEmpty {
             infoView.alpha = 0
             tableView.alpha = 0
+            title = "Add an Event"
         }
 
-//        DispatchQueue.main.async {
-//            self.loadData()
-//            self.configureView()
-//            self.updateLabels()
-//        }
+        self.navigationController?.hidesBarsOnSwipe = false
+        configureView()
+        self.configureDropdownMenu()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-                DispatchQueue.main.async {
-                    self.loadData()
-                    self.configureView()
-                    self.updateLabels()
-                }
-
+        DispatchQueue.main.async {
+            self.loadData()
+            self.configureView()
+            self.updateLabels()
+            self.configureDropdownMenu()
+        }
     }
     
     // MARK: - UI
     func configureView() {
         self.configureTableView()
         
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
+        //self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        //self.navigationController?.navigationBar.shadowImage = UIImage()
+        //self.navigationController?.navigationBar.isTranslucent = true
         
         tableView.tableFooterView = UIView()
         tableView.layer.cornerRadius = 8
@@ -159,6 +159,36 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    func configureDropdownMenu() {
+        let dropdownItems = CategoryManager.loadCategories()
+        
+        print(dropdownItems)
+        
+        if let navigationController = self.navigationController {
+            let menuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: BTTitle.title("My Events"), items: dropdownItems)
+            
+            menuView.cellTextLabelColor = UIColor.blue
+            menuView.cellBackgroundColor = UIColor.clear
+            menuView.maskBackgroundColor = UIColor.clear
+            menuView.maskBackgroundOpacity = 0.1
+            //menuView.cellTextLabelFont = UIFont(descriptor: , size: <#T##CGFloat#>)
+            menuView.animationDuration = 0.4
+            menuView.cellSeparatorColor = UIColor.darkGray
+
+
+            menuView.didSelectItemAtIndexHandler = { (index: Int) -> () in
+                print("Did select item at index: \(index)")
+                //self.selectedCellLabel.text = items[index]
+            }
+            
+            self.navigationItem.titleView = menuView
+        }
+    }
+    
+
+
+    
+    
     // MARK: - Data Load/Sort
 
     func loadData() {
@@ -245,24 +275,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return eventsArray.count
     }
     
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//
-//        if editingStyle == .delete {
-//            let eventToDelete = self.eventsArray[indexPath.row]
-//
-//            DispatchQueue.main.async {
-//                self.tableView.beginUpdates()
-//                EventManager.shared.deleteEvent(eventToDelete)
-//                self.eventsArray.remove(at: indexPath.row)
-//                self.tableView.deleteRows(at: [indexPath], with: .fade)
-//
-//                self.configureView()
-//                self.updateLabels()
-//                self.tableView.endUpdates()
-//            }
-//        }
-//    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -308,6 +320,7 @@ extension MainViewController: EventDetailViewControllerDelegate {
     }
 }
 
+// MARK: - SwipeCellKit
 extension MainViewController: SwipeTableViewCellDelegate {
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
         if orientation == .right {
@@ -329,6 +342,9 @@ extension MainViewController: SwipeTableViewCellDelegate {
         } else {
             let editAction = SwipeAction(style: .default, title: nil) { (action, indexPath) in
                 // Edit an event by swiping from the left
+                let eventToEdit = self.eventsArray[indexPath.row]
+                
+                self.performSegue(withIdentifier: "EditEvent", sender: eventToEdit)
             }
             
             editAction.image = UIImage(named: "Edit")

@@ -40,6 +40,8 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
   
         self.tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
         formatter.dateFormat = "E, d MMM yyyy"
+        
+        self.navigationController?.hidesBarsOnSwipe = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -128,8 +130,10 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
                 newEvent.iconName = icon
                 delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
             } else {
-                print("SOMETHING IS MISSING!")
-                return
+                // Missing information = present an alert
+                let alertController = UIAlertController(title: "Missing Information", message: "Oops! Please make sure you've entered a category, date and icon.", preferredStyle: .alert)
+                alertController.addAction(UIAlertAction(title: "My Bad!", style: .cancel, handler: nil))
+                present(alertController, animated: true, completion: nil)
             }
         }
     }

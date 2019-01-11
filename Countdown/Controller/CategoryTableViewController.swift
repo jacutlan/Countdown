@@ -25,7 +25,7 @@ class CategoryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        categories = loadCategories()
+        categories = CategoryManager.loadCategories()
         tableView.rowHeight = 44
         doneBarButton.isEnabled = selectedCategory != nil
 
@@ -40,16 +40,6 @@ class CategoryTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-    
-    func loadCategories() -> [String] {
-        categories = defaults.object(forKey: "Categories") as? [String] ?? ["Life", "Work", "School", "Birthday", "Anniversary", "Holiday"]
-        return categories
-    }
-    
-    func saveCategories() {
-        defaults.set(categories, forKey: "Categories")
-    }
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -122,7 +112,7 @@ class CategoryTableViewController: UITableViewController {
                 self.tableView(self.tableView, cellForRowAt: newIndexPath).accessoryType = .checkmark
                 self.tableView.endUpdates()
                 
-                self.saveCategories()
+                CategoryManager.saveCategories(categories: self.categories)
                 self.delegate?.categoryTableViewController(self, didFinishSelecting: categoryName)
             }
         }
@@ -199,7 +189,7 @@ class CategoryTableViewController: UITableViewController {
                 selectedCategory = categories[selectedIndexPath!.row]
             }
             categories.remove(at: indexPath.row)
-            saveCategories()
+            CategoryManager.saveCategories(categories: categories)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }

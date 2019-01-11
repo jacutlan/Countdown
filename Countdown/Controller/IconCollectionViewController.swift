@@ -12,27 +12,43 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
     weak var delegate: IconCollectionViewControllerDelegate?
     
     let spacing: CGFloat = 16.0
-    
     let iconNames: [String] = [
         "icons8-airplane_take_off",
         "icons8-babys_room.png",
+        "icons8-bear",
         "icons8-birthday",
+        "icons8-businessman",
+        "icons8-businesswoman",
+        "icons8-calendar",
         "icons8-carpool",
+        "icons8-cat",
+        "icons8-chicken",
+        "icons8-client_company",
         "icons8-clinic",
+        "icons8-cocktail",
         "icons8-commercial_development_management_filled",
+        "icons8-confetti",
         "icons8-dancing",
         "icons8-dancing_party",
+        "icons8-dog",
         "icons8-firework_explosion",
+        "icons8-goal",
+        "icons8-horse",
+        "icons8-newlyweds",
+        "icons8-party_baloons",
         "icons8-pencil_tip",
+        "icons8-sell_property",
         "icons8-sunbathe",
+        "icons8-tropics_filled",
         "icons8-water_transportation"
     ]
-    
+
     var iconImages = [UIImage]()
     var selectedIcon: String?
-    
     let selectedColour = UIColor.yellow
     let defaultColour = UIColor.white
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +58,12 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
 
         collectionView.contentInset = UIEdgeInsets(top: (self.navigationController?.navigationBar.frame.size.height)! + UIApplication.shared.statusBarFrame.size.height, left: 0, bottom: 0, right: 0)
         
+        //self.navigationController?.hidesBarsOnSwipe = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.collectionView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
+        
         configureCollectionView()
         
         for index in 0 ..< iconNames.count {
@@ -49,12 +71,8 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
             iconImages.append(newImage!)
         }
     }
-    
-    // MARK: - UI
-    
+
     func configureCollectionView() {
-        self.collectionView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
-        
         let layout = UICollectionViewFlowLayout()
         
         layout.sectionInset = UIEdgeInsets(top: spacing, left: spacing, bottom: spacing, right: spacing)
@@ -65,7 +83,7 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let numberOfItemsPerRow: CGFloat = 4
-        let spacingBetweenCells: CGFloat = 16
+        let spacingBetweenCells: CGFloat = 23
         
         let totalSpacing = (2 * self.spacing) + ( (numberOfItemsPerRow - 1) * spacingBetweenCells)
         
@@ -78,19 +96,17 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
     }
     
     // MARK: - UICollectionViewDelegate
-    
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let newSelectedCell = collectionView.cellForItem(at: indexPath) as! IconCell
-        
+
         if let selectedIcon = self.selectedIcon {
             let oldIndex = iconNames.firstIndex(of: selectedIcon)
             let oldSelectedCell = collectionView.cellForItem(at: IndexPath(row: oldIndex!, section: 0)) as! IconCell
-            
-            UIView.animate(withDuration: 0.3) {
 
+            UIView.animate(withDuration: 0.3) {
                 oldSelectedCell.iconImageView.setImageColor(color: self.defaultColour)
                 oldSelectedCell.layer.borderColor = self.defaultColour.cgColor
-                
+
                 newSelectedCell.iconImageView.setImageColor(color: self.selectedColour)
                 newSelectedCell.layer.borderWidth = 3
                 newSelectedCell.layer.borderColor = self.selectedColour.cgColor
@@ -101,13 +117,11 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
                 newSelectedCell.layer.borderColor = self.selectedColour.cgColor
             }
         }
-        
+
         selectedIcon = iconNames[indexPath.row]
         delegate?.iconCollectionViewController(self, didFinishSelecting: selectedIcon!)
     }
     
-    
-
     // MARK: - UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
