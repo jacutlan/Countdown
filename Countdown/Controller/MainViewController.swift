@@ -18,11 +18,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     @IBOutlet weak var mainEventDateLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var infoView: UIView!
+    @IBOutlet weak var tvContainer: UIView!
    
     @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
     
     let formatter = DateFormatter()
     var eventsArray = [Event]()
+    
+    var dropdownMenuView: BTNavigationDropdownMenu?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,20 +49,17 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         DispatchQueue.main.async {
+            
             self.loadData()
+            self.configureDropdownMenu()
             self.configureView()
             self.updateLabels()
-            self.configureDropdownMenu()
         }
     }
     
     // MARK: - UI
     func configureView() {
         self.configureTableView()
-        
-        //self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        //self.navigationController?.navigationBar.shadowImage = UIImage()
-        //self.navigationController?.navigationBar.isTranslucent = true
         
         tableView.tableFooterView = UIView()
         tableView.layer.cornerRadius = 8
@@ -72,7 +72,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 self.tableView.alpha = 0
             }
         } else {
-            updateTitle(newTitle: "My Events")
+            //updateTitle(newTitle: "My Events")
+            
             UIView.animate(withDuration: 0.3) {
                 self.infoView.alpha = 1
                 self.tableView.alpha = 1
@@ -84,29 +85,30 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func configureTableView() {
-        let containerHeight = tableView.superview?.frame.size.height
+        let containerHeight = tvContainer.frame.size.height
+
         let maxRowCount: Int
         let maxTableViewHeight: CGFloat
-        
+ 
         switch containerHeight {
-        case 248:   // iPhone SE
-            tableView.rowHeight = 61
-            maxRowCount = 4
-        case 297.5: // iPhone 6, 7, 8
-            tableView.rowHeight = 58.7
-            maxRowCount = 5
-        case 332:   // 6,7,8+
-            tableView.rowHeight = 54.6
-            maxRowCount = 6
-        case 341:   // XS, X
-            tableView.rowHeight = 56.1
-            maxRowCount = 6
-        case 383:   // XR, XS Max
-            tableView.rowHeight = 62.8
-            maxRowCount = 6
-        default:    // Nokia 3210
-            tableView.rowHeight = 60
-            maxRowCount = 5
+            case 242:   // iPhone SE
+                tableView.rowHeight = 58 // (containerHeight - 10px bottom padding) / maxRowCount, rounded to 1 decimal
+                maxRowCount = 4
+            case 291.5: // iPhone 6, 7, 8
+                tableView.rowHeight = 56.3
+                maxRowCount = 5
+            case 326:   // 6,7,8+
+                tableView.rowHeight = 52.7
+                maxRowCount = 6
+            case 335:   // XS, X
+                tableView.rowHeight = 54.1
+                maxRowCount = 6
+            case 377:   // XR, XS Max
+                tableView.rowHeight = 61.12
+                maxRowCount = 6
+            default:    // Nokia 3210
+                tableView.rowHeight = 60
+                maxRowCount = 5
         }
         
         maxTableViewHeight = CGFloat(maxRowCount) * tableView.rowHeight
@@ -115,14 +117,20 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.tableView.isScrollEnabled = false
             
             self.tableViewHeight.constant = CGFloat(self.eventsArray.count) * self.tableView.rowHeight
+
             UIView.animate(withDuration: 0.2) {
                 self.view.layoutIfNeeded()
             }
         } else {
             self.tableViewHeight.constant = maxTableViewHeight
             self.tableView.isScrollEnabled = true
+            
+            UIView.animate(withDuration: 0.2) {
+                self.view.layoutIfNeeded()
+            }
         }
         
+        self.tableView.setContentOffset(.zero, animated: true)
         tableView.layer.borderColor = UIColor.black.cgColor
         tableView.layer.borderWidth = 1
     }
@@ -152,45 +160,55 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if self.navigationItem.title != newTitle {
             let pushTextAnimation = CATransition()
             pushTextAnimation.duration = 0.5
-            pushTextAnimation.type = CATransitionType.push
-            
+            pushTextAnimation.type = CATransitionType.fade
+
             navigationController?.navigationBar.layer.add(pushTextAnimation, forKey: "pushText")
             navigationItem.title = newTitle
         }
     }
     
+    //MARK: BTNavigationDropdownMenu
     func configureDropdownMenu() {
-        let dropdownItems = CategoryManager.loadCategories()
+        var categoriesInUse = [String]()
         
-        print(dropdownItems)
+        for event in eventsArray {
+            categoriesInUse.append(event.category)
+        }
+        
+        var distinctCategories = Array(Set(categoriesInUse)).sorted()
+        
+        distinctCategories.insert("All Events", at: 0)
         
         if let navigationController = self.navigationController {
-            let menuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: BTTitle.title("My Events"), items: dropdownItems)
+            dropdownMenuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: distinctCategories[0], items: distinctCategories)
             
-            menuView.cellTextLabelColor = UIColor.blue
-            menuView.cellBackgroundColor = UIColor.clear
-            menuView.maskBackgroundColor = UIColor.clear
-            menuView.maskBackgroundOpacity = 0.1
-            //menuView.cellTextLabelFont = UIFont(descriptor: , size: <#T##CGFloat#>)
-            menuView.animationDuration = 0.4
-            menuView.cellSeparatorColor = UIColor.darkGray
+            dropdownMenuView?.cellTextLabelColor = UIColor.white
+            dropdownMenuView?.animationDuration = 0.4
+            dropdownMenuView?.cellSeparatorColor = UIColor.white
+            dropdownMenuView?.cellSelectionColor = #colorLiteral(red: 0.9242601395, green: 0.8005190492, blue: 0.4070278406, alpha: 1)
 
-
-            menuView.didSelectItemAtIndexHandler = { (index: Int) -> () in
-                print("Did select item at index: \(index)")
-                //self.selectedCellLabel.text = items[index]
+            dropdownMenuView?.didSelectItemAtIndexHandler = { (index: Int) -> () in
+                // MARK: Filter events by category
+                if index == 0 {
+                    if let events = EventManager.shared.getEvents() {
+                        self.eventsArray = events
+                        self.sortData()
+                        self.configureTableView()
+                        self.tableView.reloadData()
+                    }
+                } else {
+                    self.eventsArray = EventManager.shared.filterEvents(byCategory: distinctCategories[index])
+                    self.sortData()
+                    self.tableView.reloadData()
+                    self.configureTableView()
+                }
             }
             
-            self.navigationItem.titleView = menuView
+            self.navigationItem.titleView = dropdownMenuView
         }
     }
     
-
-
-    
-    
     // MARK: - Data Load/Sort
-
     func loadData() {
         if let events = EventManager.shared.getEvents() {
             eventsArray = events
@@ -208,7 +226,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Navigation
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddEvent" {
             let controller = segue.destination as! AddEventViewController
@@ -219,8 +236,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let controller = segue.destination as! AddEventViewController
             
             if let editingEvent = sender as? Event {
-                print("You're about to edit the event: \(editingEvent.name)")
-                
                 controller.delegate = self
                 controller.eventToEdit = editingEvent
                 controller.eventName = editingEvent.name
@@ -240,9 +255,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    
-    // MARK: - TableView Delegate
-    
+    // MARK: - TableView Delegate    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EventCell", for: indexPath) as! EventCell
         
@@ -270,7 +283,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - TableView Data Source
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return eventsArray.count
     }

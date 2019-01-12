@@ -37,14 +37,15 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     override func viewDidLoad() {
         super.viewDidLoad()
-  
-        self.tableView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
+
         formatter.dateFormat = "E, d MMM yyyy"
         
         self.navigationController?.hidesBarsOnSwipe = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.tableView.backgroundView?.backgroundColor = UIColor(red: 30.0, green: 144.0, blue: 255.0, alpha: 1.0)
+        
         eventIconImageView.layer.borderWidth = 1
         eventIconImageView.layer.borderColor = UIColor.black.cgColor
         eventIconImageView.layer.cornerRadius = 8

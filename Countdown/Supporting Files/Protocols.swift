@@ -29,3 +29,6 @@ extension UIImageView {
         self.tintColor = color
     }
 }
+
+// Dark blue: #3742fa
+// Sky blue: #1e90ff

@@ -55,15 +55,9 @@ class IconCollectionViewController: UICollectionViewController, UICollectionView
 
         let nib = UINib(nibName: "IconCell", bundle: nil)
         self.collectionView!.register(nib, forCellWithReuseIdentifier: "IconCell")
-
-        collectionView.contentInset = UIEdgeInsets(top: (self.navigationController?.navigationBar.frame.size.height)! + UIApplication.shared.statusBarFrame.size.height, left: 0, bottom: 0, right: 0)
-        
-        //self.navigationController?.hidesBarsOnSwipe = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.collectionView.backgroundView = UIImageView(image: UIImage(named: "gradient_blue"))
-        
         configureCollectionView()
         
         for index in 0 ..< iconNames.count {
