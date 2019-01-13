@@ -26,6 +26,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var eventsArray = [Event]()
     
     var dropdownMenuView: BTNavigationDropdownMenu?
+    var viewingCategory: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,20 +39,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if eventsArray.isEmpty {
             infoView.alpha = 0
             tableView.alpha = 0
-            title = "Add an Event"
         }
 
         self.navigationController?.hidesBarsOnSwipe = false
         configureView()
-        self.configureDropdownMenu()
+        self.configureDropdownMenu(forCategory: viewingCategory)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         DispatchQueue.main.async {
-            
-            self.loadData()
-            self.configureDropdownMenu()
+            if self.viewingCategory == nil { self.loadData() }
+            self.configureDropdownMenu(forCategory: self.viewingCategory)
             self.configureView()
             self.updateLabels()
         }
@@ -64,16 +64,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         tableView.tableFooterView = UIView()
         tableView.layer.cornerRadius = 8
 
-        if eventsArray.isEmpty {
-            updateTitle(newTitle: "Add an Event")
-            
+        if eventsArray.isEmpty && viewingCategory == nil {
             UIView.animate(withDuration: 0.3) {
                 self.infoView.alpha = 0
                 self.tableView.alpha = 0
             }
         } else {
-            //updateTitle(newTitle: "My Events")
-            
             UIView.animate(withDuration: 0.3) {
                 self.infoView.alpha = 1
                 self.tableView.alpha = 1
@@ -168,20 +164,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     //MARK: BTNavigationDropdownMenu
-    func configureDropdownMenu() {
+    func configureDropdownMenu(forCategory category: String?) {
+        // Make a list of categories that are in use by existing events
         var categoriesInUse = [String]()
         
-        for event in eventsArray {
+        for event in EventManager.shared.getEvents()! {
             categoriesInUse.append(event.category)
         }
         
         var distinctCategories = Array(Set(categoriesInUse)).sorted()
-        
         distinctCategories.insert("All Events", at: 0)
         
+        // Set the screen's title to the selected category if there is one, otherwise 'All Events'
+        let dropdownTitle = category ?? distinctCategories[0]
+        
         if let navigationController = self.navigationController {
-            dropdownMenuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: distinctCategories[0], items: distinctCategories)
+            dropdownMenuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: dropdownTitle, items: distinctCategories)
             
+            // Configure the menu's appearance
             dropdownMenuView?.cellTextLabelColor = UIColor.white
             dropdownMenuView?.animationDuration = 0.4
             dropdownMenuView?.cellSeparatorColor = UIColor.white
@@ -189,16 +189,18 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
 
             dropdownMenuView?.didSelectItemAtIndexHandler = { (index: Int) -> () in
                 // MARK: Filter events by category
-                if index == 0 {
+                if index == 0 { // 'All Events' selected: fetch all the events, sort them, reconfigure the table view if needed and reload everything
                     if let events = EventManager.shared.getEvents() {
                         self.eventsArray = events
                         self.sortData()
                         self.configureTableView()
+                        self.viewingCategory = nil
                         self.tableView.reloadData()
                     }
-                } else {
-                    self.eventsArray = EventManager.shared.filterEvents(byCategory: distinctCategories[index])
+                } else {        // If a category was selected, fetch the events of that category and sort, configure etc
+                    self.eventsArray = EventManager.shared.getEvents(forCategory: distinctCategories[index])!
                     self.sortData()
+                    self.viewingCategory = distinctCategories[index]
                     self.tableView.reloadData()
                     self.configureTableView()
                 }
@@ -343,9 +345,18 @@ extension MainViewController: SwipeTableViewCellDelegate {
                 
                 EventManager.shared.deleteEvent(eventToDelete)
                 self.eventsArray.remove(at: indexPath.row)
-                self.configureView()
                 self.updateLabels()
+                
                 action.fulfill(with: .delete)
+                
+                if self.eventsArray.count == 0 {
+                    self.loadData()
+                    self.viewingCategory = nil
+                    self.configureDropdownMenu(forCategory: self.viewingCategory)
+                    self.tableView.reloadData()
+                }
+                
+                self.configureView()
             }
             
             deleteAction.image = UIImage(named: "Trash")

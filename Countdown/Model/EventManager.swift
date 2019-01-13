@@ -20,11 +20,16 @@ class EventManager: NSObject {
         }
     }
     
-    func getEvents() -> [Event]? {
+    func getEvents(forCategory category: String = "") -> [Event]? {
         let realm = try! Realm()
-
-        let events = realm.objects(Event.self)
-        return events.map {$0}
+        
+        if category != "" {
+            let events = realm.objects(Event.self).filter("category = %@", category)
+            return events.map {$0}
+        } else {
+            let events = realm.objects(Event.self)
+            return events.map {$0}
+        }
     }
     
     func updateEvent(_ event: Event) {
@@ -49,13 +54,6 @@ class EventManager: NSObject {
         } catch {
             print(error.localizedDescription)
         }
-    }
-    
-    func filterEvents(byCategory category: String) -> [Event] {
-        let realm = try! Realm()
-        
-        let filteredEvents = realm.objects(Event.self).filter("category = %@", category)
-        return filteredEvents.map {$0}
     }
 }
 
