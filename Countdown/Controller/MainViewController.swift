@@ -36,7 +36,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         let nib = UINib(nibName: "EventCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "EventCell")
         
-        if eventsArray.isEmpty {
+        if eventsArray.isEmpty && viewingCategory == nil {
             infoView.alpha = 0
             tableView.alpha = 0
         }
@@ -110,20 +110,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         maxTableViewHeight = CGFloat(maxRowCount) * tableView.rowHeight
 
         if CGFloat(eventsArray.count) * tableView.rowHeight <= maxTableViewHeight {
-            self.tableView.isScrollEnabled = false
-            
+            //self.tableView.isScrollEnabled = false
             self.tableViewHeight.constant = CGFloat(self.eventsArray.count) * self.tableView.rowHeight
-
-            UIView.animate(withDuration: 0.2) {
-                self.view.layoutIfNeeded()
-            }
         } else {
             self.tableViewHeight.constant = maxTableViewHeight
-            self.tableView.isScrollEnabled = true
-            
-            UIView.animate(withDuration: 0.2) {
-                self.view.layoutIfNeeded()
-            }
+            //self.tableView.isScrollEnabled = true
+        }
+        
+        UIView.animate(withDuration: 0.2) {
+            self.view.layoutIfNeeded()
         }
         
         self.tableView.setContentOffset(.zero, animated: true)
@@ -152,17 +147,6 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    func updateTitle(newTitle: String) {
-        if self.navigationItem.title != newTitle {
-            let pushTextAnimation = CATransition()
-            pushTextAnimation.duration = 0.5
-            pushTextAnimation.type = CATransitionType.fade
-
-            navigationController?.navigationBar.layer.add(pushTextAnimation, forKey: "pushText")
-            navigationItem.title = newTitle
-        }
-    }
-    
     //MARK: BTNavigationDropdownMenu
     func configureDropdownMenu(forCategory category: String?) {
         // Make a list of categories that are in use by existing events
@@ -172,15 +156,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             categoriesInUse.append(event.category)
         }
         
-        var distinctCategories = Array(Set(categoriesInUse)).sorted()
+        var distinctCategories = Array(Set(categoriesInUse)).sorted()   // Make a set of unique categories in use, then convert it back to an array and sort it
         distinctCategories.insert("All Events", at: 0)
         
         // Set the screen's title to the selected category if there is one, otherwise 'All Events'
-        let dropdownTitle = category ?? distinctCategories[0]
+        let dropdownTitle: String
         
-        if let navigationController = self.navigationController {
+        if let viewingCategory = category {
+            dropdownTitle = viewingCategory
+        } else {
+            dropdownTitle = "All Events"
+        }
+
+        if let navigationController = self.navigationController, eventsArray.count > 0 {
             dropdownMenuView = BTNavigationDropdownMenu(navigationController: navigationController, containerView: (navigationController.view)!, title: dropdownTitle, items: distinctCategories)
-            
+
             // Configure the menu's appearance
             dropdownMenuView?.cellTextLabelColor = UIColor.white
             dropdownMenuView?.animationDuration = 0.4
@@ -198,19 +188,25 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                         self.tableView.reloadData()
                     }
                 } else {        // If a category was selected, fetch the events of that category and sort, configure etc
-                    self.eventsArray = EventManager.shared.getEvents(forCategory: distinctCategories[index])!
-                    self.sortData()
-                    self.viewingCategory = distinctCategories[index]
-                    self.tableView.reloadData()
-                    self.configureTableView()
+                    if let filteredEvents = EventManager.shared.getEvents(forCategory: distinctCategories[index]) {
+                        self.eventsArray = filteredEvents
+                        self.sortData()
+                        self.viewingCategory = distinctCategories[index]
+                        self.tableView.reloadData()
+                        self.configureTableView()
+                    }
                 }
             }
-            
+
             self.navigationItem.titleView = dropdownMenuView
+        } else {
+            self.navigationItem.titleView = nil
         }
     }
     
     // MARK: - Data Load/Sort
+    
+    // Load all events
     func loadData() {
         if let events = EventManager.shared.getEvents() {
             eventsArray = events
@@ -340,39 +336,39 @@ extension MainViewController: SwipeTableViewCellDelegate {
         if orientation == .right {
             let deleteAction = SwipeAction(style: .destructive, title: nil) { (action, indexPath) in
                 //Delete an event by swiping from the right
-                
                 let eventToDelete = self.eventsArray[indexPath.row]
-                
+
                 EventManager.shared.deleteEvent(eventToDelete)
                 self.eventsArray.remove(at: indexPath.row)
                 self.updateLabels()
-                
+
                 action.fulfill(with: .delete)
-                
+
                 if self.eventsArray.count == 0 {
                     self.loadData()
                     self.viewingCategory = nil
                     self.configureDropdownMenu(forCategory: self.viewingCategory)
                     self.tableView.reloadData()
                 }
-                
+
                 self.configureView()
+
             }
-            
+
             deleteAction.image = UIImage(named: "Trash")
-            
+
             return [deleteAction]
         } else {
             let editAction = SwipeAction(style: .default, title: nil) { (action, indexPath) in
                 // Edit an event by swiping from the left
                 let eventToEdit = self.eventsArray[indexPath.row]
-                
+
                 self.performSegue(withIdentifier: "EditEvent", sender: eventToEdit)
             }
-            
+
             editAction.image = UIImage(named: "Edit")
             editAction.backgroundColor = UIColor.yellow
-            
+
             return [editAction]
         }
     }

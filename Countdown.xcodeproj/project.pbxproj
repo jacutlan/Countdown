@@ -32,6 +32,7 @@
 		446A687B21E5E1D100711C49 /* CategoryIcons in Resources */ = {isa = PBXBuildFile; fileRef = 446A687A21E5E1D100711C49 /* CategoryIcons */; };
 		4471AF3E21B67F5200761DAC /* RealmDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4471AF3D21B67F5200761DAC /* RealmDataModel.swift */; };
 		447378EC21E8630700260427 /* CategoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447378EB21E8630700260427 /* CategoryManager.swift */; };
+		44883B8921EF0A0200F6F5EC /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44883B8821EF0A0200F6F5EC /* SettingsTableViewController.swift */; };
 		8C11DE4A8A5131AE27A996B8 /* Pods_Countdown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4B8C017270E549F6E11729 /* Pods_Countdown.framework */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 		446A687A21E5E1D100711C49 /* CategoryIcons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CategoryIcons; sourceTree = "<group>"; };
 		4471AF3D21B67F5200761DAC /* RealmDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmDataModel.swift; sourceTree = "<group>"; };
 		447378EB21E8630700260427 /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
+		44883B8821EF0A0200F6F5EC /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		6F4B8C017270E549F6E11729 /* Pods_Countdown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Countdown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4902BCB96858849A77B41A5 /* Pods-Countdown.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Countdown.release.xcconfig"; path = "Pods/Target Support Files/Pods-Countdown/Pods-Countdown.release.xcconfig"; sourceTree = "<group>"; };
 		E8A7EAFEAA69D41E09FEBCB3 /* Pods-Countdown.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Countdown.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Countdown/Pods-Countdown.debug.xcconfig"; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				443C5CFF21BCB7DD00B7F8A9 /* CategoryTableViewController.swift */,
 				443C5D0121BCB93A00B7F8A9 /* EventDetailViewController.swift */,
 				4469BE8E21CDF7760028A2D5 /* IconCollectionViewController.swift */,
+				44883B8821EF0A0200F6F5EC /* SettingsTableViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -317,6 +320,7 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Countdown/Pods-Countdown-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/BTNavigationDropdownMenu/BTNavigationDropdownMenu.framework",
+				"${BUILT_PRODUCTS_DIR}/ChameleonFramework/ChameleonFramework.framework",
 				"${BUILT_PRODUCTS_DIR}/SwipeCellKit/SwipeCellKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -324,6 +328,7 @@
 			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BTNavigationDropdownMenu.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChameleonFramework.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwipeCellKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +354,7 @@
 				4400189C21B28B120066EB0F /* AddEditEventViewController.swift in Sources */,
 				443C5D0B21C09B0D00B7F8A9 /* EventCell.swift in Sources */,
 				4469BE9121CE0EA90028A2D5 /* IconCell.swift in Sources */,
+				44883B8921EF0A0200F6F5EC /* SettingsTableViewController.swift in Sources */,
 				4400188A21B26B970066EB0F /* AppDelegate.swift in Sources */,
 				443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */,
 				443C5D0021BCB7DD00B7F8A9 /* CategoryTableViewController.swift in Sources */,

@@ -6,6 +6,7 @@
 //  Copyright © 2018 Josh Cutlan. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 @UIApplicationMain
@@ -13,11 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        //UINavigationBar.appearance().tintColor = UIColor.purple
-        //UINavigationBar.appearance().largeTitleTextAttributes =
-        //    [NSAttributedString.Key.foregroundColor:UIColor.white]
         
         return true
     }

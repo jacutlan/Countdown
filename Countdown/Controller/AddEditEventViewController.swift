@@ -29,7 +29,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     var selectedCategory: String?
 
     let formatter = DateFormatter()
-    let eventDateRow = IndexPath(row: 2, section: 1)
+    let eventDateRow = IndexPath(row: 3, section: 1)
 
     weak var delegate: AddEditEventViewControllerDelegate?
     
@@ -47,7 +47,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         self.tableView.backgroundView?.backgroundColor = UIColor(red: 30.0, green: 144.0, blue: 255.0, alpha: 1.0)
         
         eventIconImageView.layer.borderWidth = 1
-        eventIconImageView.layer.borderColor = UIColor.black.cgColor
+
         eventIconImageView.layer.cornerRadius = 8
         eventIconImageView.contentMode = .scaleAspectFill
         
@@ -55,8 +55,10 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             categoryLabel.text = selectedCategory ?? "Select Category"
             
             if let selectedIcon = self.selectedIcon {
+                eventIconImageView.layer.borderColor = UIColor.black.cgColor
                 eventIconImageView.image = UIImage(named: selectedIcon)?.imageWithInsets(insetDimension: 8)
             } else {
+                eventIconImageView.layer.borderColor = UIColor.red.cgColor
                 eventIconImageView.image = UIImage()    // New events will have no icon to begin with!
             }
             
@@ -98,8 +100,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     // MARK: - Actions
-    @IBAction func cancel() {
-        eventNameTextField.resignFirstResponder()
+    @IBAction func cancel() {        eventNameTextField.resignFirstResponder()
         delegate?.addEditEventViewControllerDidCancel(self)
     }
     
@@ -143,15 +144,23 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     func showDatePicker() {
         datePickerVisible = true
-        let indexPathDatePicker = IndexPath(row: 3, section: 1)
+        let indexPathDatePicker = IndexPath(row: 4, section: 1)
         tableView.insertRows(at: [indexPathDatePicker], with: .fade)
         datePicker.date = eventToEdit?.date ?? Date()
+        
+        if let eventDate = self.eventDate {
+            eventDateLabel.text = formatter.string(from: eventDate)
+        } else {
+            eventDate = Date()
+            eventDateLabel.text = formatter.string(from: Date())
+        }
+
     }
     
     func hideDatePicker() {
         if datePickerVisible {
             datePickerVisible = false
-            let indexPathDatePicker = IndexPath(row: 3, section: 1)
+            let indexPathDatePicker = IndexPath(row: 4, section: 1)
             tableView.deleteRows(at: [indexPathDatePicker], with: .fade)
         }
     }
@@ -177,7 +186,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 1 && indexPath.row == 3 {
+        if indexPath.section == 1 && indexPath.row == 4 {
             return datePickerCell
         } else {
             return super.tableView(tableView, cellForRowAt: indexPath)
@@ -186,14 +195,14 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 1 && datePickerVisible {
-            return 4
+            return 5
         } else {
             return super.tableView(tableView, numberOfRowsInSection: section)
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 1 && indexPath.row == 3 {          // The row of the Date Picker
+        if indexPath.section == 1 && indexPath.row == 4 {          // The row of the Date Picker
             return 217
         } else {
             return super.tableView(tableView, heightForRowAt: indexPath)
@@ -209,7 +218,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     // Something I learned from iOS apprentice - necessary for the date picker toggling to work
     override func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
         var newIndexPath = indexPath
-        if indexPath.section == 1 && indexPath.row == 3 {
+        if indexPath.section == 1 && indexPath.row == 4 {
             newIndexPath = IndexPath(row: 0, section: indexPath.section)
         }
         
