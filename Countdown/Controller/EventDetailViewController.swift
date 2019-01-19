@@ -33,9 +33,10 @@ class EventDetailViewController: UIViewController {
         containerView.layer.borderWidth = 1
         containerView.layer.cornerRadius = 8
         
-        navigationBar.setBackgroundImage(UIImage(), for: .default)
+        //navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
         navigationBar.isTranslucent = true
+
     }
     
     func updateLabels() {

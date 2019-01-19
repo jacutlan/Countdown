@@ -9,6 +9,7 @@
 import UIKit
 import SwipeCellKit
 import BTNavigationDropdownMenu
+import Hero
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -55,6 +56,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.configureView()
             self.updateLabels()
         }
+    }
+    
+    // MARK: - Actions
+    
+    func settingsTapped() {
+        performSegue(withIdentifier: "openSettings", sender: self)
     }
     
     // MARK: - UI
@@ -147,17 +154,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
-    //MARK: BTNavigationDropdownMenu
+    // MARK: - BTNavigationDropdownMenu
     func configureDropdownMenu(forCategory category: String?) {
         // Make a list of categories that are in use by existing events
         var categoriesInUse = [String]()
         
-        for event in EventManager.shared.getEvents()! {
+        for event in EventManager.shared.getCurrentEvents()! {
             categoriesInUse.append(event.category)
         }
         
         var distinctCategories = Array(Set(categoriesInUse)).sorted()   // Make a set of unique categories in use, then convert it back to an array and sort it
         distinctCategories.insert("All Events", at: 0)
+        
+        if let pastEvents = EventManager.shared.getPastEvents(), pastEvents.count > 0 {
+            distinctCategories.append("Past Events")
+        }
         
         // Set the screen's title to the selected category if there is one, otherwise 'All Events'
         let dropdownTitle: String
@@ -180,20 +191,33 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             dropdownMenuView?.didSelectItemAtIndexHandler = { (index: Int) -> () in
                 // MARK: Filter events by category
                 if index == 0 { // 'All Events' selected: fetch all the events, sort them, reconfigure the table view if needed and reload everything
-                    if let events = EventManager.shared.getEvents() {
+                    if let events = EventManager.shared.getCurrentEvents() {
                         self.eventsArray = events
                         self.sortData()
                         self.configureTableView()
+                        self.updateLabels()
                         self.viewingCategory = nil
                         self.tableView.reloadData()
                     }
+                } else if index == distinctCategories.count - 1 {
+                // MARK: Handle past events
+                    if let pastEvents = EventManager.shared.getPastEvents() {
+                        self.eventsArray = pastEvents
+                        self.sortData()
+                        self.viewingCategory = nil
+                        self.tableView.reloadData()
+                        self.configureTableView()
+                        self.updateLabels()
+                    }
+                    
                 } else {        // If a category was selected, fetch the events of that category and sort, configure etc
-                    if let filteredEvents = EventManager.shared.getEvents(forCategory: distinctCategories[index]) {
+                    if let filteredEvents = EventManager.shared.getCurrentEvents(forCategory: distinctCategories[index]) {
                         self.eventsArray = filteredEvents
                         self.sortData()
                         self.viewingCategory = distinctCategories[index]
                         self.tableView.reloadData()
                         self.configureTableView()
+                        self.updateLabels()
                     }
                 }
             }
@@ -208,7 +232,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // Load all events
     func loadData() {
-        if let events = EventManager.shared.getEvents() {
+        if let events = EventManager.shared.getCurrentEvents() {
             eventsArray = events
             sortData()
             
@@ -220,7 +244,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     // Sort by date, soonest to furthest away
     func sortData() {
-        eventsArray = eventsArray.sorted(by: {$0.date < $1.date} )
+        eventsArray = eventsArray.sorted {$0.date < $1.date}
     }
     
     // MARK: - Navigation
@@ -250,6 +274,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             let controller = segue.destination as! EventDetailViewController
             controller.event = selectedEvent
             controller.delegate = self
+        }
+        
+        if segue.identifier == "openSettings" {
+            // Spin on your head
         }
     }
     
@@ -352,6 +380,7 @@ extension MainViewController: SwipeTableViewCellDelegate {
                 }
 
                 self.configureView()
+                self.updateLabels()
 
             }
 

@@ -151,7 +151,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         if let eventDate = self.eventDate {
             eventDateLabel.text = formatter.string(from: eventDate)
         } else {
-            eventDate = Date()
+            eventDate = Date().midnight()
             eventDateLabel.text = formatter.string(from: Date())
         }
 
@@ -166,7 +166,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     }
     
     @IBAction func dateChanged(_ datePicker: UIDatePicker) {
-        eventDate = datePicker.date
+        eventDate = datePicker.date.midnight()
         eventDateLabel.text = formatter.string(from: eventDate!)
     }
 

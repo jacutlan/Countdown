@@ -20,16 +20,23 @@ class EventManager: NSObject {
         }
     }
     
-    func getEvents(forCategory category: String = "") -> [Event]? {
+    func getCurrentEvents(forCategory category: String = "") -> [Event]? {
         let realm = try! Realm()
         
         if category != "" {
-            let events = realm.objects(Event.self).filter("category = %@", category)
+            let events = realm.objects(Event.self).filter("category = %@ and date >= %@", category, Date().midnight())
             return events.map {$0}
         } else {
-            let events = realm.objects(Event.self)
+            let events = realm.objects(Event.self).filter("date >= %@", Date().midnight())
             return events.map {$0}
         }
+    }
+    
+    func getPastEvents() -> [Event]? {
+        let realm = try! Realm()
+        
+        let pastEvents = realm.objects(Event.self).filter("date < %@", Date().midnight())
+        return pastEvents.map {$0}
     }
     
     func updateEvent(_ event: Event) {
@@ -57,3 +64,12 @@ class EventManager: NSObject {
     }
 }
 
+// MARK: - Helper function to set all new dates to midnight of that day
+extension Date {
+    func midnight() -> Date {
+        let cal = Calendar(identifier: .gregorian)
+        let midnight = cal.startOfDay(for: self)
+        
+        return midnight
+    }
+}
