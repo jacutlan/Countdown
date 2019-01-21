@@ -1,5 +1,6 @@
 import UIKit
 import RealmSwift
+import Foundation
 
 class EventManager: NSObject {
     static let shared = EventManager()
@@ -53,6 +54,19 @@ class EventManager: NSObject {
     
     func deleteEvent(_ event: Event) {
         let realm = try! Realm()
+        
+        if let backgroundImagePath = event.backgroundImagePath {
+            let imageURL = URL(string: backgroundImagePath)
+            
+            print("Attempting to delete photo at URL \(imageURL)")
+            
+            do {
+                try FileManager.default.removeItem(at: imageURL!)
+            } catch {
+                print("Error deleting photo: \(error)")
+            }
+            
+        }
         
         do {
             try realm.write {

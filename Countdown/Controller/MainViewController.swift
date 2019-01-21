@@ -262,8 +262,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 controller.eventToEdit = editingEvent
                 controller.eventName = editingEvent.name
                 controller.eventDate = editingEvent.date
-                controller.selectedIcon = editingEvent.iconName
+                controller.selectedIconPath = editingEvent.iconName
                 controller.selectedCategory = editingEvent.category
+                controller.backgroundImagePath = editingEvent.backgroundImagePath
+
                 controller.title = "Edit Event"
             }
         }

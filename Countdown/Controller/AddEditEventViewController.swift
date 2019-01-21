@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class AddEventViewController: UITableViewController, UITextFieldDelegate, CategoryTableViewControllerDelegate, IconCollectionViewControllerDelegate {
     
@@ -18,6 +19,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     @IBOutlet weak var eventDateLabel: UILabel!
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var eventIconImageView: UIImageView!
+    @IBOutlet weak var eventBackgroundImageView: UIImageView!
     
     var datePickerVisible = false
     
@@ -25,11 +27,29 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
     
     var eventName: String?
     var eventDate: Date?
-    var selectedIcon: String?
+    var selectedIconPath: String?
     var selectedCategory: String?
+    
+    var selectedBackgroundImage: UIImage? {
+        didSet {
+            eventBackgroundImageView.image = selectedBackgroundImage
+            eventBackgroundImageView.layer.borderWidth = 1
+            eventBackgroundImageView.layer.cornerRadius = 8
+            eventBackgroundImageView.layer.borderColor = UIColor.black.cgColor
+            eventBackgroundImageView.contentMode = .scaleAspectFit
+            eventBackgroundImageView.clipsToBounds = true
+        }
+    }
+    var backgroundImagePath: String?
 
     let formatter = DateFormatter()
+    let applicationDocumentsDirectory: URL = {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }()
+    
     let eventDateRow = IndexPath(row: 3, section: 1)
+    let backgroundPickerRow = IndexPath(row: 2, section: 1)
 
     weak var delegate: AddEditEventViewControllerDelegate?
     
@@ -41,20 +61,20 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         formatter.dateFormat = "E, d MMM yyyy"
         
         self.navigationController?.hidesBarsOnSwipe = false
+        listenForBackgroundNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.tableView.backgroundView?.backgroundColor = UIColor(red: 30.0, green: 144.0, blue: 255.0, alpha: 1.0)
         
         eventIconImageView.layer.borderWidth = 1
-
         eventIconImageView.layer.cornerRadius = 8
         eventIconImageView.contentMode = .scaleAspectFill
         
         if eventToEdit == nil {
             categoryLabel.text = selectedCategory ?? "Select Category"
             
-            if let selectedIcon = self.selectedIcon {
+            if let selectedIcon = self.selectedIconPath {
                 eventIconImageView.layer.borderColor = UIColor.black.cgColor
                 eventIconImageView.image = UIImage(named: selectedIcon)?.imageWithInsets(insetDimension: 8)
             } else {
@@ -76,9 +96,20 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             eventNameTextField.text = eventName
             eventDateLabel.text = formatter.string(from: eventDate!)
             categoryLabel.text = selectedCategory
-            eventIconImageView.image = UIImage(named: selectedIcon!)?.imageWithInsets(insetDimension: 8)
+            eventIconImageView.image = UIImage(named: selectedIconPath!)?.imageWithInsets(insetDimension: 8)
             
-            doneBarButton.isEnabled = true
+            if let backgroundImagePath = self.backgroundImagePath {
+                let imageURL = URL(string: backgroundImagePath)
+                do {
+                    let photoData = try Data(contentsOf: imageURL!)
+                    selectedBackgroundImage = UIImage(data: photoData)
+                } catch {
+                    print("Error loading photo: \(error)")
+                }
+                
+                
+                doneBarButton.isEnabled = true
+            }
         }
     }
     
@@ -95,7 +126,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         if segue.identifier == "SelectIcon" {
             let controller = segue.destination as! IconCollectionViewController
             controller.delegate = self
-            controller.selectedIcon = selectedIcon ?? nil
+            controller.selectedIcon = selectedIconPath ?? nil
         }
     }
     
@@ -114,7 +145,22 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
                     realmEditEvent.name = eventNameTextField.text!
                     realmEditEvent.date = eventDate!
                     realmEditEvent.category = selectedCategory!
-                    realmEditEvent.iconName = selectedIcon!
+                    realmEditEvent.iconName = selectedIconPath!
+                    
+                    if let selectedImage = selectedBackgroundImage {
+                        let fileName = "Photo-\(realmEditEvent.eventID).jpg"
+                        let photoPath = applicationDocumentsDirectory.appendingPathComponent(fileName)
+                        
+                        if let data = selectedImage.jpegData(compressionQuality: 0.5) {
+                            do {
+                                try data.write(to: photoPath)
+                            } catch {
+                                print("Error saving the background photo: \(error)")
+                            }
+                        }
+                        
+                        realmEditEvent.backgroundImagePath = photoPath.absoluteString
+                    }
                 }
             } catch {
                 print("*** Error: " + error.localizedDescription)
@@ -123,13 +169,31 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             eventNameTextField.resignFirstResponder()            
             delegate?.addEditEventViewController(self, didFinishUpdating: eventToEdit!)
         } else {
-            if let date = eventDate, let icon = selectedIcon, let category = selectedCategory {
+            if let date = eventDate, let icon = selectedIconPath, let category = selectedCategory {
                 let newEvent = Event()
                 
                 newEvent.name = eventNameTextField.text!
                 newEvent.date = date
                 newEvent.category = category
                 newEvent.iconName = icon
+                
+                // MARK: Save the background image
+                if let selectedImage = selectedBackgroundImage {
+                    let filename = "Photo-\(newEvent.eventID).jpg"
+                    let photoPath = applicationDocumentsDirectory.appendingPathComponent(filename)
+                    
+                    print("**** PHOTO PATH: \(photoPath)")
+                    
+                    if let data = selectedImage.jpegData(compressionQuality: 0.5) {
+                        do {
+                            try data.write(to: photoPath)
+                        } catch {
+                            print("Error saving the background photo: \(error)")
+                        }
+                    }
+                    
+                    newEvent.backgroundImagePath = photoPath.absoluteString
+                }
                 delegate?.addEditEventDetailViewController(self, didFinishAdding: newEvent)
             } else {
                 // Missing information = present an alert
@@ -176,12 +240,17 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
         tableView.deselectRow(at: indexPath, animated: true)
         eventNameTextField.resignFirstResponder()
         
-        if indexPath == eventDateRow {
-            if !datePickerVisible {
-                showDatePicker()
-            } else {
-                hideDatePicker()
-            }
+        switch indexPath {
+            case eventDateRow:
+                if !datePickerVisible {
+                    showDatePicker()
+                } else {
+                    hideDatePicker()
+                }
+            case backgroundPickerRow:
+                pickPhoto()
+            default:
+                return
         }
     }
     
@@ -276,7 +345,81 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             controller.navigationController?.popViewController(animated: true)
         }
         
-        selectedIcon = icon
+        selectedIconPath = icon
         eventIconImageView.image = UIImage(named: icon)
+    }
+}
+
+extension AddEventViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func pickPhoto() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            showPhotoMenu()
+        } else {
+            choosePhotoFromLibrary()
+        }
+    }
+    
+    func showPhotoMenu() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        let photoAction = UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
+            self.takePhotoWithCamera()
+        })
+        alert.addAction(photoAction)
+        
+        let libraryAction = UIAlertAction(title: "Choose From Library", style: .default, handler: { _ in
+            self.choosePhotoFromLibrary()
+        })
+        alert.addAction(libraryAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func takePhotoWithCamera() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .camera
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        dismiss(animated: true, completion: {
+            self.selectedBackgroundImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+            
+            UIView.transition(with: self.eventBackgroundImageView, duration: 0.3, options: UIView.AnimationOptions.transitionCrossDissolve, animations: {
+                self.eventBackgroundImageView.image = self.selectedBackgroundImage
+            }, completion: nil)
+        })
+    }
+
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func choosePhotoFromLibrary() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    // Called if the photo picker action sheet is open when the user goes to their home screen...so that when they come back there isn't an action sheet staring them in the face
+    func listenForBackgroundNotification() {
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: OperationQueue.main) { [weak self] _ in
+            
+            if let weakSelf = self {
+                if weakSelf.presentedViewController != nil {
+                    weakSelf.dismiss(animated: false, completion: nil)
+                }
+                
+               weakSelf.eventNameTextField.resignFirstResponder()
+            }
+        }
     }
 }

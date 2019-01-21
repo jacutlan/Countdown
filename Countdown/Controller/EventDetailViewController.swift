@@ -18,6 +18,8 @@ class EventDetailViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var navigationBar: UINavigationBar!
     
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    
     var event: Event!
     let dateFormatter = DateFormatter()
     weak var delegate: EventDetailViewControllerDelegate?
@@ -33,10 +35,25 @@ class EventDetailViewController: UIViewController {
         containerView.layer.borderWidth = 1
         containerView.layer.cornerRadius = 8
         
-        //navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
         navigationBar.isTranslucent = true
-
+        
+        if let backgroundImagePath = event.backgroundImagePath {
+            let url = URL(string: backgroundImagePath)
+            
+            print(backgroundImagePath)
+            
+            
+            do {
+                let data = try Data(contentsOf: url!)
+                let image = UIImage(data: data)
+                self.backgroundImageView.contentMode = .scaleAspectFill
+                self.backgroundImageView.image = image
+            } catch {
+                print("Error loading photo: \(error.localizedDescription)")
+            }
+        }
     }
     
     func updateLabels() {

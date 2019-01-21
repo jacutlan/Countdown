@@ -18,6 +18,26 @@ class Event: Object {
     @objc dynamic var category = "Life" // Default category
     @objc dynamic var iconName = "icons8-birthday" // Default icon
     @objc dynamic var eventID = UUID().uuidString
+    @objc dynamic var backgroundImagePath: String? {
+        didSet {
+            self.backgroundImage = UIImage(contentsOfFile: backgroundImagePath!)
+        }
+    }
+    
+    var backgroundImage: UIImage?
+    
+    //    var backgroundImage: UIImage {
+//        if backgroundImagePath != nil {
+//            let image = UIImage(contentsOfFile: backgroundImagePath!)
+//            return image!
+//        } else {
+//            return UIImage()
+//        }
+//    }
+    
+    var hasBackgroundPhoto: Bool {
+        return backgroundImagePath != nil
+    }
     
     override static func primaryKey() -> String? {
         return "eventID"
