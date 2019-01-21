@@ -34,6 +34,7 @@ class EventDetailViewController: UIViewController {
         containerView.layer.borderColor = UIColor.black.cgColor
         containerView.layer.borderWidth = 1
         containerView.layer.cornerRadius = 8
+        containerView.clipsToBounds = true
         
         navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationBar.shadowImage = UIImage()
