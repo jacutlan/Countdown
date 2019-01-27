@@ -9,7 +9,6 @@
 import UIKit
 import SwipeCellKit
 import BTNavigationDropdownMenu
-import Hero
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
@@ -248,6 +247,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     // MARK: - Navigation
+    @IBAction func dismissSettingsVC(_ segue: UIStoryboardSegue) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "AddEvent" {
             let controller = segue.destination as! AddEventViewController

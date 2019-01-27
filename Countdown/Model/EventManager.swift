@@ -58,8 +58,6 @@ class EventManager: NSObject {
         if let backgroundImagePath = event.backgroundImagePath {
             let imageURL = URL(string: backgroundImagePath)
             
-            print("Attempting to delete photo at URL \(imageURL)")
-            
             do {
                 try FileManager.default.removeItem(at: imageURL!)
             } catch {

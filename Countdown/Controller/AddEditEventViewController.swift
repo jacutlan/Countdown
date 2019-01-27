@@ -36,7 +36,7 @@ class AddEventViewController: UITableViewController, UITextFieldDelegate, Catego
             eventBackgroundImageView.layer.borderWidth = 1
             eventBackgroundImageView.layer.cornerRadius = 8
             eventBackgroundImageView.layer.borderColor = UIColor.black.cgColor
-            eventBackgroundImageView.contentMode = .scaleAspectFit
+            eventBackgroundImageView.contentMode = .scaleAspectFill
             eventBackgroundImageView.clipsToBounds = true
         }
     }
@@ -388,8 +388,12 @@ extension AddEventViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         dismiss(animated: true, completion: {
-            self.selectedBackgroundImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage
+            let pickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
+            let imagePath = info[UIImagePickerController.InfoKey.imageURL] as? URL
             
+            self.backgroundImagePath = imagePath?.absoluteString
+            self.selectedBackgroundImage = pickedImage
+
             UIView.transition(with: self.eventBackgroundImageView, duration: 0.3, options: UIView.AnimationOptions.transitionCrossDissolve, animations: {
                 self.eventBackgroundImageView.image = self.selectedBackgroundImage
             }, completion: nil)
@@ -405,7 +409,8 @@ extension AddEventViewController: UIImagePickerControllerDelegate, UINavigationC
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        imagePicker.allowsEditing = true
+        
+        //imagePicker.allowsEditing = true
         present(imagePicker, animated: true, completion: nil)
     }
     

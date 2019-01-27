@@ -22,6 +22,11 @@ protocol EventDetailViewControllerDelegate: class {
     func eventDetailViewController(_ controller: EventDetailViewController, editing editingEvent: Event)
 }
 
+protocol ThemeViewControllerDelegate: class {
+    func themeViewControllerDismissed(_ controller: ThemeViewController)
+    func themeViewController(_ controller: ThemeViewController, didFinishSelecting theme: Theme)
+}
+
 extension UIImageView {
     func setImageColor(color: UIColor) {
         let templateImage = self.image?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
@@ -29,6 +34,3 @@ extension UIImageView {
         self.tintColor = color
     }
 }
-
-// Dark blue: #3742fa
-// Sky blue: #1e90ff
