@@ -36,6 +36,8 @@
 		44883B8B21F0751600F6F5EC /* CustomSegues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44883B8A21F0751600F6F5EC /* CustomSegues.swift */; };
 		44F8F70721FDB7310095290B /* ThemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F8F70621FDB7310095290B /* ThemeViewController.swift */; };
 		44F8F70921FDB87C0095290B /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F8F70821FDB87C0095290B /* Theme.swift */; };
+		44F8F70B21FE735C0095290B /* ThemeSlide.xib in Resources */ = {isa = PBXBuildFile; fileRef = 44F8F70A21FE735C0095290B /* ThemeSlide.xib */; };
+		44F8F70D21FE77710095290B /* ThemeSlide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F8F70C21FE77710095290B /* ThemeSlide.swift */; };
 		44FAED3921F71F88009BA9E3 /* NotificationCenter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 44FAED3821F71F88009BA9E3 /* NotificationCenter.framework */; };
 		44FAED3C21F71F88009BA9E3 /* TodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FAED3B21F71F88009BA9E3 /* TodayViewController.swift */; };
 		44FAED3F21F71F88009BA9E3 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44FAED3D21F71F88009BA9E3 /* MainInterface.storyboard */; };
@@ -109,6 +111,8 @@
 		44883B8A21F0751600F6F5EC /* CustomSegues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegues.swift; sourceTree = "<group>"; };
 		44F8F70621FDB7310095290B /* ThemeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeViewController.swift; sourceTree = "<group>"; };
 		44F8F70821FDB87C0095290B /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		44F8F70A21FE735C0095290B /* ThemeSlide.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThemeSlide.xib; sourceTree = "<group>"; };
+		44F8F70C21FE77710095290B /* ThemeSlide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSlide.swift; sourceTree = "<group>"; };
 		44FAED3721F71F87009BA9E3 /* CountdownExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		44FAED3821F71F88009BA9E3 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		44FAED3B21F71F88009BA9E3 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
@@ -187,6 +191,8 @@
 				4469BE9021CE0EA90028A2D5 /* IconCell.swift */,
 				4469BE9421CE1BE50028A2D5 /* IconCell.xib */,
 				44883B8A21F0751600F6F5EC /* CustomSegues.swift */,
+				44F8F70A21FE735C0095290B /* ThemeSlide.xib */,
+				44F8F70C21FE77710095290B /* ThemeSlide.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -344,6 +350,7 @@
 				4469BE9521CE1BE50028A2D5 /* IconCell.xib in Resources */,
 				446A687B21E5E1D100711C49 /* CategoryIcons in Resources */,
 				443C5D0C21C09B0D00B7F8A9 /* EventCell.xib in Resources */,
+				44F8F70B21FE735C0095290B /* ThemeSlide.xib in Resources */,
 				4400189421B26B980066EB0F /* LaunchScreen.storyboard in Resources */,
 				4400189121B26B980066EB0F /* Assets.xcassets in Resources */,
 				4469BE8D21CDF4070028A2D5 /* Default-568h@2x.png in Resources */,
@@ -448,6 +455,7 @@
 				443C5D0B21C09B0D00B7F8A9 /* EventCell.swift in Sources */,
 				44F8F70721FDB7310095290B /* ThemeViewController.swift in Sources */,
 				4469BE9121CE0EA90028A2D5 /* IconCell.swift in Sources */,
+				44F8F70D21FE77710095290B /* ThemeSlide.swift in Sources */,
 				44883B8921EF0A0200F6F5EC /* SettingsTableViewController.swift in Sources */,
 				4400188A21B26B970066EB0F /* AppDelegate.swift in Sources */,
 				443C5D0221BCB93A00B7F8A9 /* EventDetailViewController.swift in Sources */,

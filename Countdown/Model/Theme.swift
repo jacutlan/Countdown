@@ -12,9 +12,11 @@ import UIKit
 struct Theme {
     var darkColour: UIColor!
     var lightColour: UIColor!
+    var themeName: String!
     
-    init(darkColour: UIColor, lightColour: UIColor) {
+    init(darkColour: UIColor, lightColour: UIColor, themeName: String) {
         self.darkColour = darkColour
         self.lightColour = lightColour
+        self.themeName = themeName
     }
 }

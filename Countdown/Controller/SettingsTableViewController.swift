@@ -9,8 +9,8 @@
 import UIKit
 
 class SettingsTableViewController: UITableViewController {
-    @IBOutlet weak var darkColourBox: UIImageView!
-    @IBOutlet weak var lightColourBox: UIImageView!
+    @IBOutlet weak var darkColourBox: UIView!
+    @IBOutlet weak var lightColourBox: UIView!
 
     let selectThemeRow = IndexPath(row: 0, section: 0)
     
@@ -77,5 +77,6 @@ extension SettingsTableViewController: ThemeViewControllerDelegate {
     
     func themeViewController(_ controller: ThemeViewController, didFinishSelecting theme: Theme) {
         controller.navigationController?.popViewController(animated: true)
+        print("Selected theme: \(theme.themeName)")
     }
 }

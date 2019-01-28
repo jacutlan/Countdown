@@ -605,21 +605,20 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="A6u-Xw-ZGW">
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="A6u-Xw-ZGW">
                                                     <rect key="frame" x="295.66666666666669" y="5" width="75.333333333333314" height="33.666666666666664"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ogN-fO-jet" userLabel="DarkColour">
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="llv-uN-lsQ">
                                                             <rect key="frame" x="0.0" y="0.0" width="33.666666666666664" height="33.666666666666664"/>
-                                                            <color key="backgroundColor" red="0.15410047769546509" green="0.41306763887405396" blue="0.69063264131546021" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </imageView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ZVZ-70-dlT" userLabel="LightColour">
+                                                            <color key="backgroundColor" red="0.15410047769999999" green="0.41306763889999998" blue="0.69063264130000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vZ2-TV-Fq8">
                                                             <rect key="frame" x="41.666666666666629" y="0.0" width="33.666666666666657" height="33.666666666666664"/>
                                                             <color key="backgroundColor" red="0.19376453757286072" green="0.50850099325180054" blue="0.85232251882553101" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </imageView>
+                                                        </view>
                                                     </subviews>
                                                     <constraints>
-                                                        <constraint firstItem="ogN-fO-jet" firstAttribute="width" secondItem="ZVZ-70-dlT" secondAttribute="height" multiplier="1:1" id="rfd-oZ-B7p"/>
-                                                        <constraint firstItem="ZVZ-70-dlT" firstAttribute="width" secondItem="ogN-fO-jet" secondAttribute="height" multiplier="1:1" id="wMR-9N-C8H"/>
+                                                        <constraint firstItem="llv-uN-lsQ" firstAttribute="width" secondItem="vZ2-TV-Fq8" secondAttribute="height" multiplier="1:1" id="6NV-Kz-J9r"/>
                                                     </constraints>
                                                 </stackView>
                                             </subviews>
@@ -651,42 +650,43 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="darkColourBox" destination="ogN-fO-jet" id="H2t-KY-19F"/>
-                        <outlet property="lightColourBox" destination="ZVZ-70-dlT" id="NfU-z2-nka"/>
+                        <outlet property="darkColourBox" destination="llv-uN-lsQ" id="Xhl-24-eUn"/>
+                        <outlet property="lightColourBox" destination="vZ2-TV-Fq8" id="SFa-Zb-mfY"/>
                         <segue destination="p5o-D6-Ccs" kind="show" identifier="PickTheme" id="IG0-cb-cxb"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="54L-3i-7OM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="6Re-bo-M5P" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="599" y="173"/>
+            <point key="canvasLocation" x="598.55072463768124" y="172.76785714285714"/>
         </scene>
         <!--Select Theme-->
         <scene sceneID="D8H-0c-pjq">
             <objects>
                 <viewController id="p5o-D6-Ccs" customClass="ThemeViewController" customModule="Countdown" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="hQv-LL-aYc">
+                    <view key="view" opaque="NO" contentMode="scaleToFill" id="hQv-LL-aYc">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" scrollEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwc-31-szO">
-                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
-                                <subviews>
-                                    <pageControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="rCP-C7-UOr">
-                                        <rect key="frame" x="28" y="720" width="358" height="37"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="pageIndicatorTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </pageControl>
-                                </subviews>
+                            <scrollView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kwc-31-szO">
+                                <rect key="frame" x="0.0" y="88" width="414" height="808"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </scrollView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="rCP-C7-UOr">
+                                <rect key="frame" x="20" y="815" width="374" height="37"/>
+                                <color key="pageIndicatorTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="currentPageIndicatorTintColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="kwc-31-szO" firstAttribute="top" secondItem="Lyb-VG-Sta" secondAttribute="top" id="Q08-M3-5Vr"/>
-                            <constraint firstItem="kwc-31-szO" firstAttribute="trailing" secondItem="Lyb-VG-Sta" secondAttribute="trailing" id="VRe-3G-ikm"/>
-                            <constraint firstItem="kwc-31-szO" firstAttribute="bottom" secondItem="Lyb-VG-Sta" secondAttribute="bottom" id="br1-31-IA2"/>
-                            <constraint firstItem="kwc-31-szO" firstAttribute="leading" secondItem="Lyb-VG-Sta" secondAttribute="leading" id="hQJ-G5-yzY"/>
+                            <constraint firstItem="rCP-C7-UOr" firstAttribute="leading" secondItem="Lyb-VG-Sta" secondAttribute="leading" constant="20" id="2pR-LU-vLc"/>
+                            <constraint firstAttribute="trailing" secondItem="kwc-31-szO" secondAttribute="trailing" id="Hdw-Be-Z2l"/>
+                            <constraint firstItem="Lyb-VG-Sta" firstAttribute="trailing" secondItem="rCP-C7-UOr" secondAttribute="trailing" constant="20" id="UkC-KA-V6Z"/>
+                            <constraint firstAttribute="bottom" secondItem="kwc-31-szO" secondAttribute="bottom" id="YQL-T6-WfP"/>
+                            <constraint firstItem="kwc-31-szO" firstAttribute="leading" secondItem="Lyb-VG-Sta" secondAttribute="leading" id="aym-KQ-m1j"/>
+                            <constraint firstItem="kwc-31-szO" firstAttribute="top" secondItem="Lyb-VG-Sta" secondAttribute="top" id="cic-wL-p0O"/>
+                            <constraint firstItem="Lyb-VG-Sta" firstAttribute="bottom" secondItem="rCP-C7-UOr" secondAttribute="bottom" constant="10" id="dny-9D-6c8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Lyb-VG-Sta"/>
                     </view>
